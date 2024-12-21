@@ -99,7 +99,11 @@ const ModernLoadingAnimation = () => {
   )
 }
 
-export function KeywordForm({ onSubmit }) {
+interface KeywordFormProps {
+  onSubmitAction: (response: any) => void;
+}
+
+export function KeywordForm({ onSubmitAction }: KeywordFormProps) {
   const [formData, setFormData] = useState({
     keyword: '',
     location_code: '2840',
@@ -118,7 +122,7 @@ export function KeywordForm({ onSubmit }) {
     // Simulate API call with a 3-second delay
     setTimeout(() => {
       const response = mockApiResponse(formData.keyword)
-      onSubmit(response)
+      onSubmitAction(response)
       setIsLoading(false)
     }, 3000)
   }
@@ -274,4 +278,3 @@ export function KeywordForm({ onSubmit }) {
     </form>
   )
 }
-
