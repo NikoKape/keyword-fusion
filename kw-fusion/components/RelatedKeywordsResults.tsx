@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, TrendingUp, Zap, ArrowUpDown } from 'lucide-react'
@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-type KeywordResult = {
+interface KeywordResult {
   keyword: string
   search_volume: number
   cpc: number
@@ -22,15 +22,22 @@ type KeywordResult = {
   relevance: number
 }
 
+interface KeywordData {
+  keyword: string
+  results: KeywordResult[]
+}
+
+interface ChartDataEntry {
+  month: string
+  [key: string]: string | number  // Index signature for dynamic keyword properties
+}
+
 interface RelatedKeywordsResultsProps {
-  data: {
-    keyword: string
-    results: KeywordResult[]
-  }
+  data: KeywordData
 }
 
 // Mock monthly data for the chart
-const generateMockMonthlyData = (keyword: string, baseVolume: number) => {
+const generateMockMonthlyData = (keyword: string, baseVolume: number): ChartDataEntry[] => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   return months.map(month => ({
     month,
@@ -39,12 +46,16 @@ const generateMockMonthlyData = (keyword: string, baseVolume: number) => {
 }
 
 export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
+  // State hooks
+  const [mounted, setMounted] = useState(false)
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([])
   const [sortConfig, setSortConfig] = useState<{ key: keyof KeywordResult; direction: 'asc' | 'desc' } | null>(null)
   const [chartMetric, setChartMetric] = useState<'search_volume' | 'cpc'>('search_volume')
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '12m'>('12m')
 
+  // Memoized values
   const sortedResults = useMemo(() => {
+    if (!mounted) return []
     let sortableItems = [...data.results]
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
@@ -58,7 +69,34 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
       })
     }
     return sortableItems
-  }, [data.results, sortConfig])
+  }, [data.results, sortConfig, mounted])
+
+  const chartData = useMemo(() => {
+    if (!mounted) return []
+    const baseData = generateMockMonthlyData(data.keyword, data.results[0].search_volume)
+    const monthsToShow = timeRange === '1m' ? 1 : timeRange === '3m' ? 3 : timeRange === '6m' ? 6 : 12
+    return baseData.slice(-monthsToShow).map(entry => {
+      const additionalData: { [key: string]: number } = selectedKeywords.reduce((acc: { [key: string]: number }, keyword) => {
+        const result = data.results.find(r => r.keyword === keyword)
+        if (result) {
+          acc[keyword] = chartMetric === 'search_volume'
+            ? Math.floor(result.search_volume * (0.8 + Math.random() * 0.4))
+            : result.cpc * (0.8 + Math.random() * 0.4)
+        }
+        return acc
+      }, {})
+      return { ...entry, ...additionalData }
+    })
+  }, [data, selectedKeywords, timeRange, chartMetric, mounted])
+
+  // Effects
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   const requestSort = (key: keyof KeywordResult) => {
     let direction: 'asc' | 'desc' = 'asc'
@@ -100,23 +138,6 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
         : [...prev, keyword]
     )
   }
-
-  const chartData = useMemo(() => {
-    const baseData = generateMockMonthlyData(data.keyword, data.results[0].search_volume)
-    const monthsToShow = timeRange === '1m' ? 1 : timeRange === '3m' ? 3 : timeRange === '6m' ? 6 : 12
-    return baseData.slice(-monthsToShow).map(entry => {
-      const newEntry = { ...entry }
-      selectedKeywords.forEach(keyword => {
-        const keywordData = data.results.find(r => r.keyword === keyword)
-        if (keywordData) {
-          newEntry[keyword] = chartMetric === 'search_volume' 
-            ? Math.floor(keywordData.search_volume * (0.8 + Math.random() * 0.4))
-            : keywordData.cpc * (0.8 + Math.random() * 0.4)
-        }
-      })
-      return newEntry
-    })
-  }, [data, selectedKeywords, chartMetric, timeRange])
 
   return (
     <Card className="mt-8 bg-card text-card-foreground">
@@ -278,4 +299,3 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
     </Card>
   )
 }
-

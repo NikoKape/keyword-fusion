@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -28,6 +28,13 @@ export function Sidebar() {
   const [labsExpanded, setLabsExpanded] = useState(false)
   const pathname = usePathname()
   const { setTheme, theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <aside className={`bg-background border-r border-border transition-all duration-300 ${expanded ? 'w-64' : 'w-20'}`}>
@@ -101,4 +108,3 @@ export function Sidebar() {
     </aside>
   )
 }
-

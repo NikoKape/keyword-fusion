@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RelatedKeywords } from '@/components/RelatedKeywords'
 import { RelatedKeywordsResults } from '@/components/RelatedKeywordsResults'
 import { KeywordFusion } from '@/components/KeywordFusion'
@@ -12,11 +12,33 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-export default function RelatedKeywordsPage() {
-  const [results, setResults] = useState(null)
+interface KeywordResult {
+  keyword: string
+  search_volume: number
+  cpc: number
+  competition: string
+  relevance: number
+}
 
-  const handleFormSubmit = (data) => {
+interface KeywordData {
+  keyword: string
+  results: KeywordResult[]
+}
+
+export default function RelatedKeywordsPage() {
+  const [results, setResults] = useState<KeywordData | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleFormSubmit = (data: KeywordData) => {
     setResults(data)
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
@@ -79,9 +101,8 @@ export default function RelatedKeywordsPage() {
         </div>
         <RelatedKeywords onSubmit={handleFormSubmit} />
         {results && <RelatedKeywordsResults data={results} />}
-        <KeywordFusion keywords={results ? results.results.map(r => r.keyword) : []} />
+        <KeywordFusion keywords={results ? results.results.map((r: KeywordResult) => r.keyword) : []} />
       </div>
     </div>
   )
 }
-

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { Sidebar } from '@/components/Sidebar'
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: 'Keyword Planner',
   description: 'SEO and PPC Research Tool',
   // Add more metadata for better SEO
+}
+
+export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
@@ -47,4 +50,3 @@ export default function RootLayout({
     </html>
   )
 }
-

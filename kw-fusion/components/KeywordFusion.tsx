@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -35,7 +35,12 @@ const ppcPrompts = [
   { icon: Coins, label: "ROI Improvement" },
 ]
 
-export function KeywordFusion({ keywords = [] }) {
+interface KeywordFusionProps {
+  keywords: string[]
+}
+
+export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
+  const [mounted, setMounted] = useState(false)
   const [userInput, setUserInput] = useState('')
   const [systemPrompt, setSystemPrompt] = useState('')
   const [aiResponse, setAiResponse] = useState('')
@@ -44,6 +49,14 @@ export function KeywordFusion({ keywords = [] }) {
   const [aiProvider, setAiProvider] = useState('openai')
   const [aiModel, setAiModel] = useState('gpt-3.5-turbo')
   const [temperature, setTemperature] = useState(0.7)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   const handlePromptClick = (prompt: string) => {
     setUserInput(prompt)
@@ -264,4 +277,3 @@ This is a placeholder response. In a real application, this would be replaced wi
     </Card>
   )
 }
-
