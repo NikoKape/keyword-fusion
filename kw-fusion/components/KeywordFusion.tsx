@@ -84,7 +84,7 @@ This is a placeholder response. In a real application, this would be replaced wi
   }
 
   return (
-    <Card className="w-full mt-8 bg-card text-card-foreground">
+    <Card className="w-full mt-8 bg-gradient-to-b from-slate-900/50 to-slate-800/50 backdrop-blur-sm border-slate-700/50">
       <CardHeader>
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
           <Brain className="w-6 h-6" />
@@ -105,7 +105,7 @@ This is a placeholder response. In a real application, this would be replaced wi
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-slate-800/50 hover:bg-slate-700/50 border-slate-700/50"
                 onClick={() => setIsAISettingsOpen(!isAISettingsOpen)}
               >
                 {isAISettingsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -114,13 +114,13 @@ This is a placeholder response. In a real application, this would be replaced wi
             </CollapsibleTrigger>
             {!isAISettingsOpen && (
               <div className="flex gap-2">
-                <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs">
+                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
                   {aiProvider}
                 </span>
-                <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs">
+                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
                   {aiModel}
                 </span>
-                <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs">
+                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
                   T: {temperature}
                 </span>
               </div>
@@ -216,34 +216,74 @@ This is a placeholder response. In a real application, this would be replaced wi
           </TabsContent>
         </Tabs>
 
-        <div className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="system-prompt">System Prompt (Optional)</Label>
+        <div className="space-y-4 mb-4">
+          <div>
+            <Label htmlFor="system-prompt">System Prompt</Label>
             <Textarea
               id="system-prompt"
-              placeholder="Enter a system prompt to guide the AI..."
+              placeholder="Enter a system prompt to guide the AI's behavior"
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              className="min-h-[100px] bg-component"
+              className="mt-1"
             />
           </div>
-
-          <div className="flex justify-end">
-            <Button 
-              onClick={handleSubmit}
-              className="bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600"
-            >
-              Generate Analysis
-            </Button>
+          <div>
+            <Label htmlFor="user-prompt">User Prompt</Label>
+            <div className="flex gap-2">
+              <Input
+                id="user-prompt"
+                placeholder="Enter your prompt or select from above"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                className="flex-grow"
+              />
+              <Button onClick={handleSubmit}>
+                Analyze
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </div>
+        </div>
 
-          {aiResponse && (
-            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
-              <pre className="whitespace-pre-wrap font-mono text-sm">
-                {aiResponse}
-              </pre>
-            </ScrollArea>
-          )}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Card className="bg-gradient-to-b from-slate-900/40 to-slate-800/40 border-slate-700/50">
+            <CardHeader>
+              <CardTitle className="text-lg">Selected Keywords</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[200px] w-full rounded-md border border-slate-700/50 bg-slate-900/30 p-4">
+                {keywords.map((keyword, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    className={`m-1 bg-slate-800/50 hover:bg-slate-700/50 border-slate-700/50 ${
+                      selectedKeywords.includes(keyword) 
+                        ? 'bg-blue-500/20 hover:bg-blue-500/30 border-blue-500/30' 
+                        : ''
+                    }`}
+                    onClick={() => handleKeywordToggle(keyword)}
+                  >
+                    {keyword}
+                  </Button>
+                ))}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-b from-slate-900/40 to-slate-800/40 border-slate-700/50">
+            <CardHeader>
+              <CardTitle className="text-lg">AI Response</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[200px] w-full rounded-md border border-slate-700/50 bg-slate-900/30 p-4">
+                <Textarea
+                  value={aiResponse}
+                  readOnly
+                  className="w-full h-full min-h-[180px] bg-transparent border-0 focus-visible:ring-0"
+                />
+              </ScrollArea>
+            </CardContent>
+          </Card>
         </div>
       </CardContent>
     </Card>
