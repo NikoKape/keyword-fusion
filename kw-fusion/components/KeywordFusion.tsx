@@ -60,7 +60,6 @@ export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
 
   const handlePromptClick = (prompt: string) => {
     setUserInput(prompt)
-    // In a real application, you would trigger the AI analysis here
     setAiResponse(`AI analysis for: ${prompt}\n\nThis is a placeholder response. In a real application, this would be replaced with actual AI-generated content based on the selected prompt and keywords.`)
   }
 
@@ -73,7 +72,6 @@ export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
   }
 
   const handleSubmit = () => {
-    // In a real application, you would send the userInput, systemPrompt, selectedKeywords, and AI settings to your AI backend
     setAiResponse(`Analysis based on:
 User Prompt: "${userInput}"
 System Prompt: "${systemPrompt}"
@@ -173,8 +171,18 @@ This is a placeholder response. In a real application, this would be replaced wi
 
         <Tabs defaultValue="seo" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="seo">SEO</TabsTrigger>
-            <TabsTrigger value="ppc">PPC</TabsTrigger>
+            <TabsTrigger 
+              value="seo" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600/40 data-[state=active]:to-blue-500/30 data-[state=active]:text-white"
+            >
+              SEO
+            </TabsTrigger>
+            <TabsTrigger 
+              value="ppc"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600/40 data-[state=active]:to-orange-400/30 data-[state=active]:text-white"
+            >
+              PPC
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="seo">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
@@ -208,70 +216,34 @@ This is a placeholder response. In a real application, this would be replaced wi
           </TabsContent>
         </Tabs>
 
-        <div className="space-y-4 mb-4">
-          <div>
-            <Label htmlFor="system-prompt">System Prompt</Label>
+        <div className="space-y-4 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="system-prompt">System Prompt (Optional)</Label>
             <Textarea
               id="system-prompt"
-              placeholder="Enter a system prompt to guide the AI's behavior"
+              placeholder="Enter a system prompt to guide the AI..."
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              className="mt-1"
+              className="min-h-[100px] bg-component"
             />
           </div>
-          <div>
-            <Label htmlFor="user-prompt">User Prompt</Label>
-            <div className="flex gap-2">
-              <Input
-                id="user-prompt"
-                placeholder="Enter your prompt or select from above"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                className="flex-grow"
-              />
-              <Button onClick={handleSubmit}>
-                Analyze
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-        </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-lg">Selected Keywords</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                {keywords.map((keyword, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    className={`m-1 ${selectedKeywords.includes(keyword) ? 'bg-primary text-primary-foreground' : ''}`}
-                    onClick={() => handleKeywordToggle(keyword)}
-                  >
-                    {keyword}
-                  </Button>
-                ))}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-lg">AI Response</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                <Textarea
-                  value={aiResponse}
-                  readOnly
-                  className="w-full h-full min-h-[180px]"
-                />
-              </ScrollArea>
-            </CardContent>
-          </Card>
+          <div className="flex justify-end">
+            <Button 
+              onClick={handleSubmit}
+              className="bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:from-blue-600 hover:to-violet-600"
+            >
+              Generate Analysis
+            </Button>
+          </div>
+
+          {aiResponse && (
+            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+              <pre className="whitespace-pre-wrap font-mono text-sm">
+                {aiResponse}
+              </pre>
+            </ScrollArea>
+          )}
         </div>
       </CardContent>
     </Card>
