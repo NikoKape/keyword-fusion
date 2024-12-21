@@ -84,13 +84,17 @@ This is a placeholder response. In a real application, this would be replaced wi
   }
 
   return (
-    <Card className="w-full mt-8 bg-gradient-to-b from-slate-900/50 to-slate-800/50 backdrop-blur-sm border-slate-700/50">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold flex items-center gap-2">
-          <Brain className="w-6 h-6" />
-          Keyword Fusion
+    <Card className="w-full mt-8 bg-gradient-to-br from-background via-muted/50 to-background backdrop-blur-sm border-border shadow-2xl hover:shadow-border/20 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-2xl font-bold flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/10 to-violet-500/10 border border-blue-500/20 dark:from-blue-500/20 dark:to-violet-500/20">
+            <Brain className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          </div>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">
+            Keyword Fusion
+          </span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           Get AI-powered insights on your keywords for SEO and PPC
         </CardDescription>
       </CardHeader>
@@ -98,14 +102,14 @@ This is a placeholder response. In a real application, this would be replaced wi
         <Collapsible
           open={isAISettingsOpen}
           onOpenChange={setIsAISettingsOpen}
-          className="mb-4 space-y-2"
+          className="mb-6 space-y-2"
         >
           <div className="flex items-center justify-between">
             <CollapsibleTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex items-center gap-2 bg-slate-800/50 hover:bg-slate-700/50 border-slate-700/50"
+                className="flex items-center gap-2 hover:bg-muted transition-colors"
                 onClick={() => setIsAISettingsOpen(!isAISettingsOpen)}
               >
                 {isAISettingsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -114,13 +118,13 @@ This is a placeholder response. In a real application, this would be replaced wi
             </CollapsibleTrigger>
             {!isAISettingsOpen && (
               <div className="flex gap-2">
-                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
+                <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
                   {aiProvider}
                 </span>
-                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
+                <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
                   {aiModel}
                 </span>
-                <span className="bg-slate-800/60 text-slate-200 px-2 py-1 rounded-full text-xs border border-slate-700/50">
+                <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
                   T: {temperature}
                 </span>
               </div>
@@ -170,96 +174,99 @@ This is a placeholder response. In a real application, this would be replaced wi
         </Collapsible>
 
         <Tabs defaultValue="seo" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50">
             <TabsTrigger 
               value="seo" 
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600/40 data-[state=active]:to-blue-500/30 data-[state=active]:text-white"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/10 data-[state=active]:to-violet-500/10 dark:data-[state=active]:from-blue-500/20 dark:data-[state=active]:to-violet-500/20 transition-all duration-200"
             >
               SEO
             </TabsTrigger>
             <TabsTrigger 
               value="ppc"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-slate-600/40 data-[state=active]:to-orange-400/30 data-[state=active]:text-white"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500/10 data-[state=active]:to-red-500/10 dark:data-[state=active]:from-orange-500/20 dark:data-[state=active]:to-red-500/20 transition-all duration-200"
             >
               PPC
             </TabsTrigger>
           </TabsList>
           <TabsContent value="seo">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-6">
               {seoPrompts.map((prompt, index) => (
                 <Button
                   key={index}
                   variant="outline"
-                  className="flex items-center justify-start gap-2 h-auto py-2"
+                  className="flex items-center justify-start gap-2 h-auto py-2 hover:bg-muted transition-all duration-200 group"
                   onClick={() => handlePromptClick(prompt.label)}
                 >
-                  <prompt.icon className="w-4 h-4" />
-                  <span className="text-sm">{prompt.label}</span>
+                  <prompt.icon className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors" />
+                  <span className="text-sm group-hover:text-foreground transition-colors">{prompt.label}</span>
                 </Button>
               ))}
             </div>
           </TabsContent>
           <TabsContent value="ppc">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-6">
               {ppcPrompts.map((prompt, index) => (
                 <Button
                   key={index}
                   variant="outline"
-                  className="flex items-center justify-start gap-2 h-auto py-2"
+                  className="flex items-center justify-start gap-2 h-auto py-2 hover:bg-muted transition-all duration-200 group"
                   onClick={() => handlePromptClick(prompt.label)}
                 >
-                  <prompt.icon className="w-4 h-4" />
-                  <span className="text-sm">{prompt.label}</span>
+                  <prompt.icon className="w-4 h-4 text-orange-600 dark:text-orange-400 group-hover:text-orange-700 dark:group-hover:text-orange-300 transition-colors" />
+                  <span className="text-sm group-hover:text-foreground transition-colors">{prompt.label}</span>
                 </Button>
               ))}
             </div>
           </TabsContent>
         </Tabs>
 
-        <div className="space-y-4 mb-4">
+        <div className="space-y-4 mb-6">
           <div>
-            <Label htmlFor="system-prompt">System Prompt</Label>
+            <Label htmlFor="system-prompt" className="text-foreground">System Prompt</Label>
             <Textarea
               id="system-prompt"
               placeholder="Enter a system prompt to guide the AI's behavior"
               value={systemPrompt}
               onChange={(e) => setSystemPrompt(e.target.value)}
-              className="mt-1"
+              className="mt-1.5 bg-background/50 hover:bg-background focus:bg-background transition-colors resize-none"
             />
           </div>
           <div>
-            <Label htmlFor="user-prompt">User Prompt</Label>
+            <Label htmlFor="user-prompt" className="text-foreground">User Prompt</Label>
             <div className="flex gap-2">
               <Input
                 id="user-prompt"
                 placeholder="Enter your prompt or select from above"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                className="flex-grow"
+                className="flex-grow bg-background/50 hover:bg-background focus:bg-background transition-colors"
               />
-              <Button onClick={handleSubmit}>
-                Analyze
-                <ArrowRight className="w-4 h-4 ml-2" />
+              <Button 
+                onClick={handleSubmit}
+                className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 dark:from-blue-500 dark:to-violet-500 dark:hover:from-blue-600 dark:hover:to-violet-600 text-white shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all duration-200"
+              >
+                <Zap className="w-4 h-4 mr-2" />
+                Generate
               </Button>
             </div>
           </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          <Card className="bg-gradient-to-b from-slate-900/40 to-slate-800/40 border-slate-700/50">
-            <CardHeader>
-              <CardTitle className="text-lg">Selected Keywords</CardTitle>
+          <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium text-foreground">Selected Keywords</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border border-slate-700/50 bg-slate-900/30 p-4">
+              <ScrollArea className="h-[200px] w-full rounded-md border bg-muted/30 p-4">
                 {keywords.map((keyword, index) => (
                   <Button
                     key={index}
                     variant="outline"
                     size="sm"
-                    className={`m-1 bg-slate-800/50 hover:bg-slate-700/50 border-slate-700/50 ${
+                    className={`m-1 hover:bg-muted transition-colors ${
                       selectedKeywords.includes(keyword) 
-                        ? 'bg-blue-500/20 hover:bg-blue-500/30 border-blue-500/30' 
+                        ? 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30 text-blue-700 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 dark:text-blue-200' 
                         : ''
                     }`}
                     onClick={() => handleKeywordToggle(keyword)}
@@ -270,16 +277,16 @@ This is a placeholder response. In a real application, this would be replaced wi
               </ScrollArea>
             </CardContent>
           </Card>
-          <Card className="bg-gradient-to-b from-slate-900/40 to-slate-800/40 border-slate-700/50">
-            <CardHeader>
-              <CardTitle className="text-lg">AI Response</CardTitle>
+          <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium text-foreground">AI Response</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border border-slate-700/50 bg-slate-900/30 p-4">
+              <ScrollArea className="h-[200px] w-full rounded-md border bg-muted/30 p-4">
                 <Textarea
                   value={aiResponse}
                   readOnly
-                  className="w-full h-full min-h-[180px] bg-transparent border-0 focus-visible:ring-0"
+                  className="w-full h-full min-h-[180px] bg-transparent border-0 focus-visible:ring-0 text-muted-foreground"
                 />
               </ScrollArea>
             </CardContent>
