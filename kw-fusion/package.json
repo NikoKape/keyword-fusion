@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@radix-ui/react-card": "^1.0.0",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-scroll-area": "^1.0.5",
