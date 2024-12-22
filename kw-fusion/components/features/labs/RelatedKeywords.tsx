@@ -320,9 +320,11 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           label="Depth"
           value={formData.depth}
           options={[
+            { value: '0', label: 'Depth: 0' },
+            { value: '1', label: 'Depth: 1' },
+            { value: '2', label: 'Depth: 2' },
             { value: '3', label: 'Depth: 3' },
-            { value: '5', label: 'Depth: 5' },
-            { value: '10', label: 'Depth: 10' },
+            { value: '4', label: 'Depth: 4' }
           ]}
           onChange={(value) => setFormData(prev => ({ ...prev, depth: value }))}
         />
@@ -331,11 +333,10 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           icon={List}
           label="Limit"
           value={formData.limit}
-          options={[
-            { value: '20', label: 'Limit: 20' },
-            { value: '50', label: 'Limit: 50' },
-            { value: '100', label: 'Limit: 100' },
-          ]}
+          options={Array.from({ length: 10 }, (_, i) => ({
+            value: String((i + 1) * 10),
+            label: `Limit: ${(i + 1) * 10}`
+          }))}
           onChange={(value) => setFormData(prev => ({ ...prev, limit: value }))}
         />
       </div>
