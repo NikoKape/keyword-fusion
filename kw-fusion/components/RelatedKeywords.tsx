@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Globe, Languages, Layers, List, Search } from 'lucide-react'
+import { Globe, Languages, Layers, List, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 
@@ -132,6 +132,7 @@ export function RelatedKeywords({ onSubmit }) {
   const [languageOptions, setLanguageOptions] = useState([
     { value: 'en', label: 'English' }
   ])
+  const [locationLanguages, setLocationLanguages] = useState<Record<string, { value: string; label: string }[]>>({})
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -141,33 +142,22 @@ export function RelatedKeywords({ onSubmit }) {
           throw new Error('Failed to fetch options')
         }
         const data = await response.json()
-        if (data.locations && data.languages) {
-          // Set locations
-          const sortedLocations = [...data.locations].sort((a, b) => 
-            a.label.localeCompare(b.label)
-          )
-          setLocationOptions(sortedLocations)
-
-          // Set languages and ensure uniqueness
-          const uniqueLanguages = new Map()
-          data.languages.forEach(lang => {
-            if (!uniqueLanguages.has(lang.value)) {
-              uniqueLanguages.set(lang.value, lang)
-            }
-          })
-          const sortedLanguages = Array.from(uniqueLanguages.values())
-            .sort((a, b) => a.label.localeCompare(b.label))
-          setLanguageOptions(sortedLanguages)
+        if (data.locations && data.languages && data.locationLanguages) {
+          setLocationOptions(data.locations)
+          setLanguageOptions(data.languages)
+          setLocationLanguages(data.locationLanguages)
 
           // Set default values if current ones don't exist in new options
           setFormData(prev => {
-            const locationExists = sortedLocations.some(loc => loc.value === prev.location_code)
-            const languageExists = uniqueLanguages.has(prev.language_code)
+            const locationExists = data.locations.some(loc => loc.value === prev.location_code)
+            const locationCode = locationExists ? prev.location_code : data.locations[0]?.value || '2840'
+            const availableLanguages = data.locationLanguages[locationCode] || []
+            const languageExists = availableLanguages.some(lang => lang.value === prev.language_code)
             
             return {
               ...prev,
-              location_code: locationExists ? prev.location_code : sortedLocations[0]?.value || '2840',
-              language_code: languageExists ? prev.language_code : sortedLanguages[0]?.value || 'en'
+              location_code: locationCode,
+              language_code: languageExists ? prev.language_code : availableLanguages[0]?.value || 'en'
             }
           })
         }
@@ -178,6 +168,15 @@ export function RelatedKeywords({ onSubmit }) {
 
     fetchOptions()
   }, [])
+
+  const handleLocationChange = (value: string) => {
+    const availableLanguages = locationLanguages[value] || []
+    setFormData(prev => ({
+      ...prev,
+      location_code: value,
+      language_code: availableLanguages[0]?.value || prev.language_code
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -235,29 +234,66 @@ export function RelatedKeywords({ onSubmit }) {
     value: string
     options: { value: string; label: string }[]
     onChange: (value: string) => void
-  }) => (
-    <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-12 px-4 bg-background border-input hover:bg-accent hover:text-accent-foreground">
-        <div className="flex items-center gap-2">
-          <Icon className="w-5 h-5 text-muted-foreground" />
-          <SelectValue placeholder={label} />
-        </div>
-      </SelectTrigger>
-      <SelectContent className="max-h-[300px]">
-        <div className="max-h-[300px] overflow-y-auto">
-          {options.map((option) => (
-            <SelectItem 
-              key={option.value} 
-              value={option.value}
-              className="py-2.5 px-4 text-sm cursor-pointer hover:bg-accent"
-            >
-              {option.label}
-            </SelectItem>
-          ))}
-        </div>
-      </SelectContent>
-    </Select>
-  )
+  }) => {
+    const [searchQuery, setSearchQuery] = useState('')
+    
+    const filteredOptions = options.filter(option =>
+      option.label.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
+    return (
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="h-12 px-4 bg-background border-input hover:bg-accent hover:text-accent-foreground">
+          <div className="flex items-center gap-2">
+            <Icon className="w-5 h-5 text-muted-foreground" />
+            <SelectValue placeholder={label} />
+          </div>
+        </SelectTrigger>
+        <SelectContent className="max-h-[300px]">
+          <div className="p-2 pb-0">
+            <div className="flex items-center h-9 px-2 rounded-md border border-input bg-background">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <input
+                className="flex-1 h-8 ml-2 bg-transparent outline-none placeholder:text-muted-foreground"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+              />
+              {searchQuery && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setSearchQuery('')
+                  }}
+                  className="h-4 w-4 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="max-h-[250px] overflow-y-auto px-1">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="py-2.5 px-8 text-sm cursor-pointer hover:bg-accent rounded-sm"
+                >
+                  {option.label}
+                </SelectItem>
+              ))
+            ) : (
+              <div className="py-6 text-center text-sm text-muted-foreground">
+                No results found
+              </div>
+            )}
+          </div>
+        </SelectContent>
+      </Select>
+    )
+  }
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-5xl mx-auto space-y-4">
@@ -334,14 +370,13 @@ export function RelatedKeywords({ onSubmit }) {
           label="Location"
           value={formData.location_code}
           options={locationOptions}
-          onChange={(value) => setFormData(prev => ({ ...prev, location_code: value }))}
+          onChange={handleLocationChange}
         />
-
         <SelectButton
           icon={Languages}
           label="Language"
           value={formData.language_code}
-          options={languageOptions}
+          options={locationLanguages[formData.location_code] || languageOptions}
           onChange={(value) => setFormData(prev => ({ ...prev, language_code: value }))}
         />
 
