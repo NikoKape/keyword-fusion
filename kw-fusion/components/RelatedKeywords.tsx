@@ -99,13 +99,31 @@ const ModernLoadingAnimation = () => {
   )
 }
 
+interface LabsRequestBody {
+  keyword: string;
+  location_code: number;
+  language_code: string;
+  depth: number;
+  include_seed_keyword: boolean;
+  include_serp_info: boolean;
+  ignore_synonyms: boolean;
+  include_clickstream_data: boolean;
+  replace_with_core_keyword: boolean;
+  limit: number;
+}
+
 export function RelatedKeywords({ onSubmit }) {
   const [formData, setFormData] = useState({
     keyword: '',
     location_code: '2840',
     language_code: 'en',
     depth: '3',
-    limit: '20'
+    limit: '20',
+    include_seed_keyword: false,
+    include_serp_info: false,
+    ignore_synonyms: false,
+    include_clickstream_data: false,
+    replace_with_core_keyword: false
   })
   const [isLoading, setIsLoading] = useState(false)
 
@@ -115,12 +133,42 @@ export function RelatedKeywords({ onSubmit }) {
 
     setIsLoading(true)
     
-    // Simulate API call with a 3-second delay
-    setTimeout(() => {
-      const response = mockApiResponse(formData.keyword)
-      onSubmit(response)
+    try {
+      const requestBody: LabsRequestBody = {
+        keyword: formData.keyword,
+        location_code: parseInt(formData.location_code),
+        language_code: formData.language_code,
+        depth: parseInt(formData.depth),
+        limit: parseInt(formData.limit),
+        include_seed_keyword: formData.include_seed_keyword,
+        include_serp_info: formData.include_serp_info,
+        ignore_synonyms: formData.ignore_synonyms,
+        include_clickstream_data: formData.include_clickstream_data,
+        replace_with_core_keyword: formData.replace_with_core_keyword
+      }
+
+      const response = await fetch('/api/labs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+
+      if (!response.ok) {
+        throw new Error('API request failed')
+      }
+
+      const data = await response.json()
+      onSubmit(data)
+    } catch (error) {
+      console.error('Error fetching keyword data:', error)
+      // Fallback to mock data in case of error
+      const mockData = mockApiResponse(formData.keyword)
+      onSubmit(mockData)
+    } finally {
       setIsLoading(false)
-    }, 3000)
+    }
   }
 
   const SelectButton = ({ 
@@ -274,4 +322,3 @@ export function RelatedKeywords({ onSubmit }) {
     </form>
   )
 }
-
