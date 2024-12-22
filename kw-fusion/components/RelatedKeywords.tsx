@@ -265,8 +265,8 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
             <SelectValue placeholder={label} />
           </div>
         </SelectTrigger>
-        <SelectContent className="max-h-[300px]">
-          <div className="p-2 pb-0">
+        <SelectContent>
+          <div className="p-2">
             <div className="flex items-center h-9 px-2 rounded-md border border-input bg-background">
               <Search className="h-4 w-4 text-muted-foreground" />
               <input
@@ -274,15 +274,21 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setSearchQuery('')
+                  }
+                  e.stopPropagation()
+                }}
               />
               {searchQuery && (
                 <button
+                  className="h-4 w-4 text-muted-foreground hover:text-foreground"
                   onClick={(e) => {
+                    e.preventDefault()
                     e.stopPropagation()
                     setSearchQuery('')
                   }}
-                  className="h-4 w-4 text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-4 w-4" />
                 </button>
