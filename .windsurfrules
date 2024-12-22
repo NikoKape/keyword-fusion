@@ -3,9 +3,7 @@
 Every time you choose to apply a rule(s), explicitly state the rule(s) in the output. You can abbreviate the rule description to a single word or phrase.
 
 ## Project Context
-
-
-
+KeywordFusion is a modern SEO toolkit that helps content creators and marketers optimize their content through advanced keyword analysis.
 
 ## Code Style and Structure
 
@@ -15,7 +13,33 @@ Every time you choose to apply a rule(s), explicitly state the rule(s) in the ou
 - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasAnalysis)
 - Structure repository files as follows:
 
-
+kw-fusion/
+├── app/                      # Next.js app directory
+│   ├── api/                  # API routes
+│   │   └── keywords/        # Keyword-related endpoints
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx             # Home page
+├── components/              # React components
+│   ├── features/           # Feature-specific components
+│   │   ├── labs/          # Experimental features
+│   │   │   ├── keyword-analysis/
+│   │   │   ├── content-optimizer/
+│   │   │   └── location-insights/
+│   │   └── core/          # Core features
+│   ├── shared/            # Shared components
+│   │   ├── forms/        # Form components
+│   │   └── ui/          # UI components
+│   ├── navigation/        # Navigation components
+│   └── ui/               # shadcn components
+├── lib/                   # Utility functions
+│   ├── hooks/            # Custom React hooks
+│   ├── utils/            # Helper functions
+│   └── constants/        # Shared constants
+├── types/                # TypeScript types
+│   ├── keywords.ts       # Keyword-related types
+│   └── api.ts           # API-related types
+├── styles/              # Global styles
+└── public/             # Static assets
 
 
 ## Tech Stack
