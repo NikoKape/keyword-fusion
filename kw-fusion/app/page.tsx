@@ -6,6 +6,7 @@ import { RelatedKeywordsResults } from '@/components/features/labs/RelatedKeywor
 import { RelatedKeywordsHeader } from '@/components/features/labs/related-keywords-header'
 import { KeywordFusion } from '@/components/shared/KeywordFusion'
 import { KeywordFormData, RawApiResponse } from '@/types/keywords'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 export default function RelatedKeywordsPage() {
   const [results, setResults] = useState<RawApiResponse | null>(null)
@@ -55,8 +56,8 @@ export default function RelatedKeywordsPage() {
           </div>
         )}
         {isLoading && (
-          <div className="mt-4 p-4 text-center">
-            Loading...
+          <div className="mt-4 flex justify-center">
+            <LoadingSpinner />
           </div>
         )}
         {results && <RelatedKeywordsResults rawData={results} />}
