@@ -259,7 +259,7 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
 
     return (
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-12 px-4 bg-background border-input hover:bg-accent hover:text-accent-foreground">
+        <SelectTrigger className="h-12 px-4 bg-component border-input hover:bg-accent hover:text-accent-foreground">
           <div className="flex items-center gap-2">
             <Icon className="w-5 h-5 text-muted-foreground" />
             <SelectValue placeholder={label} />
@@ -325,7 +325,7 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           onChange={(e) => setFormData(prev => ({ ...prev, keyword: e.target.value }))}
           placeholder="Enter keyword for related terms..."
           className={cn(
-            "h-14 pl-12 pr-24 text-lg bg-background border-input",
+            "h-14 pl-12 pr-24 text-lg bg-component border-input",
             "placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
           )}
         />
@@ -394,6 +394,7 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           options={locationOptions}
           onChange={handleLocationChange}
         />
+
         <SelectButton
           icon={Languages}
           label="Language"
