@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -126,6 +126,58 @@ export function RelatedKeywords({ onSubmit }) {
     replace_with_core_keyword: false
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [locationOptions, setLocationOptions] = useState([
+    { value: '2840', label: 'United States' }
+  ])
+  const [languageOptions, setLanguageOptions] = useState([
+    { value: 'en', label: 'English' }
+  ])
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const response = await fetch('/api/labs/menu')
+        if (!response.ok) {
+          throw new Error('Failed to fetch options')
+        }
+        const data = await response.json()
+        if (data.locations && data.languages) {
+          // Set locations
+          const sortedLocations = [...data.locations].sort((a, b) => 
+            a.label.localeCompare(b.label)
+          )
+          setLocationOptions(sortedLocations)
+
+          // Set languages and ensure uniqueness
+          const uniqueLanguages = new Map()
+          data.languages.forEach(lang => {
+            if (!uniqueLanguages.has(lang.value)) {
+              uniqueLanguages.set(lang.value, lang)
+            }
+          })
+          const sortedLanguages = Array.from(uniqueLanguages.values())
+            .sort((a, b) => a.label.localeCompare(b.label))
+          setLanguageOptions(sortedLanguages)
+
+          // Set default values if current ones don't exist in new options
+          setFormData(prev => {
+            const locationExists = sortedLocations.some(loc => loc.value === prev.location_code)
+            const languageExists = uniqueLanguages.has(prev.language_code)
+            
+            return {
+              ...prev,
+              location_code: locationExists ? prev.location_code : sortedLocations[0]?.value || '2840',
+              language_code: languageExists ? prev.language_code : sortedLanguages[0]?.value || 'en'
+            }
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching options:', error)
+      }
+    }
+
+    fetchOptions()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -191,12 +243,18 @@ export function RelatedKeywords({ onSubmit }) {
           <SelectValue placeholder={label} />
         </div>
       </SelectTrigger>
-      <SelectContent>
-        {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
+      <SelectContent className="max-h-[300px]">
+        <div className="max-h-[300px] overflow-y-auto">
+          {options.map((option) => (
+            <SelectItem 
+              key={option.value} 
+              value={option.value}
+              className="py-2.5 px-4 text-sm cursor-pointer hover:bg-accent"
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </div>
       </SelectContent>
     </Select>
   )
@@ -273,25 +331,17 @@ export function RelatedKeywords({ onSubmit }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <SelectButton
           icon={Globe}
-          label="United States"
+          label="Location"
           value={formData.location_code}
-          options={[
-            { value: '2840', label: 'United States' },
-            { value: '2826', label: 'United Kingdom' },
-            { value: '2124', label: 'Canada' },
-          ]}
+          options={locationOptions}
           onChange={(value) => setFormData(prev => ({ ...prev, location_code: value }))}
         />
 
         <SelectButton
           icon={Languages}
-          label="English"
+          label="Language"
           value={formData.language_code}
-          options={[
-            { value: 'en', label: 'English' },
-            { value: 'es', label: 'Spanish' },
-            { value: 'fr', label: 'French' },
-          ]}
+          options={languageOptions}
           onChange={(value) => setFormData(prev => ({ ...prev, language_code: value }))}
         />
 
