@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { RelatedKeywords } from '@/components/RelatedKeywords'
-import { RelatedKeywordsResults } from '@/components/RelatedKeywordsResults'
-import { KeywordFusion } from '@/components/KeywordFusion'
+import { RelatedKeywords } from '@/components/features/labs/RelatedKeywords'
+import { RelatedKeywordsResults } from '@/components/features/labs/RelatedKeywordsResults'
+import { KeywordFusion } from '@/components/shared/KeywordFusion'
 import { HelpCircle, Search, FlaskConical } from 'lucide-react'
 import {
   Tooltip,
@@ -33,8 +33,32 @@ export default function RelatedKeywordsPage() {
     setMounted(true)
   }, [])
 
-  const handleFormSubmit = (data: KeywordData) => {
-    setResults(data)
+  const handleFormSubmit = (data: {
+    keyword: string
+    location_code: string
+    language_code: string
+    depth: string
+    limit: string
+    include_seed_keyword: boolean
+    include_serp_info: boolean
+    ignore_synonyms: boolean
+    include_clickstream_data: boolean
+    replace_with_core_keyword: boolean
+  }) => {
+    // TODO: Make API call here
+    const mockData: KeywordData = {
+      keyword: data.keyword,
+      results: [
+        {
+          keyword: data.keyword,
+          search_volume: 1000,
+          cpc: 0.5,
+          competition: "LOW",
+          relevance: 100
+        }
+      ]
+    }
+    setResults(mockData)
   }
 
   if (!mounted) {
@@ -99,7 +123,7 @@ export default function RelatedKeywordsPage() {
             Discover valuable related keywords and get AI-powered insights
           </p>
         </div>
-        <RelatedKeywords onSubmit={handleFormSubmit} />
+        <RelatedKeywords onSubmitAction={handleFormSubmit} />
         {results && <RelatedKeywordsResults data={results} />}
         <KeywordFusion keywords={results ? results.results.map((r: KeywordResult) => r.keyword) : []} />
       </div>
