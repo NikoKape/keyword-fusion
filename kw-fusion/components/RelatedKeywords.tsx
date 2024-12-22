@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 
 // Mock API response
-const mockApiResponse = (keyword: string) => ({
+const mockApiResponse = (keyword: string): ApiResponse => ({
   keyword,
   results: [
     {
@@ -112,7 +112,40 @@ interface LabsRequestBody {
   limit: number;
 }
 
-export function RelatedKeywords({ onSubmit }) {
+interface RelatedKeywordsProps {
+  onSubmitAction: (data: {
+    keyword: string
+    location_code: string
+    language_code: string
+    depth: string
+    limit: string
+    include_seed_keyword: boolean
+    include_serp_info: boolean
+    ignore_synonyms: boolean
+    include_clickstream_data: boolean
+    replace_with_core_keyword: boolean
+  }) => void
+}
+
+interface SelectOption {
+  value: string
+  label: string
+}
+
+interface KeywordResult {
+  keyword: string
+  search_volume: number
+  cpc: number
+  competition: string
+  relevance: number
+}
+
+interface ApiResponse {
+  keyword: string
+  results: KeywordResult[]
+}
+
+export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
   const [formData, setFormData] = useState({
     keyword: '',
     location_code: '2840',
@@ -126,13 +159,13 @@ export function RelatedKeywords({ onSubmit }) {
     replace_with_core_keyword: false
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [locationOptions, setLocationOptions] = useState([
+  const [locationOptions, setLocationOptions] = useState<SelectOption[]>([
     { value: '2840', label: 'United States' }
   ])
-  const [languageOptions, setLanguageOptions] = useState([
+  const [languageOptions, setLanguageOptions] = useState<SelectOption[]>([
     { value: 'en', label: 'English' }
   ])
-  const [locationLanguages, setLocationLanguages] = useState<Record<string, { value: string; label: string }[]>>({})
+  const [locationLanguages, setLocationLanguages] = useState<Record<string, SelectOption[]>>({})
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -149,10 +182,10 @@ export function RelatedKeywords({ onSubmit }) {
 
           // Set default values if current ones don't exist in new options
           setFormData(prev => {
-            const locationExists = data.locations.some(loc => loc.value === prev.location_code)
+            const locationExists = data.locations.some((loc: SelectOption) => loc.value === prev.location_code)
             const locationCode = locationExists ? prev.location_code : data.locations[0]?.value || '2840'
             const availableLanguages = data.locationLanguages[locationCode] || []
-            const languageExists = availableLanguages.some(lang => lang.value === prev.language_code)
+            const languageExists = availableLanguages.some((lang: SelectOption) => lang.value === prev.language_code)
             
             return {
               ...prev,
@@ -183,40 +216,23 @@ export function RelatedKeywords({ onSubmit }) {
     if (!formData.keyword) return
 
     setIsLoading(true)
-    
     try {
-      const requestBody: LabsRequestBody = {
-        keyword: formData.keyword,
-        location_code: parseInt(formData.location_code),
-        language_code: formData.language_code,
-        depth: parseInt(formData.depth),
-        limit: parseInt(formData.limit),
-        include_seed_keyword: formData.include_seed_keyword,
-        include_serp_info: formData.include_serp_info,
-        ignore_synonyms: formData.ignore_synonyms,
-        include_clickstream_data: formData.include_clickstream_data,
-        replace_with_core_keyword: formData.replace_with_core_keyword
-      }
-
       const response = await fetch('/api/labs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify(formData),
       })
 
       if (!response.ok) {
-        throw new Error('API request failed')
+        throw new Error('Failed to fetch data')
       }
 
-      const data = await response.json()
-      onSubmit(data)
+      const data: ApiResponse = await response.json()
+      onSubmitAction(formData)
     } catch (error) {
-      console.error('Error fetching keyword data:', error)
-      // Fallback to mock data in case of error
-      const mockData = mockApiResponse(formData.keyword)
-      onSubmit(mockData)
+      console.error('Error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -232,7 +248,7 @@ export function RelatedKeywords({ onSubmit }) {
     icon: any
     label: string
     value: string
-    options: { value: string; label: string }[]
+    options: SelectOption[]
     onChange: (value: string) => void
   }) => {
     const [searchQuery, setSearchQuery] = useState('')
