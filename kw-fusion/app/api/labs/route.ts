@@ -18,6 +18,7 @@ interface RequestBody {
 export async function POST(request: Request) {
   try {
     const body: RequestBody = await request.json()
+    console.log('Request body:', body)
 
     // Format the request body according to the API requirements
     const apiRequestBody = [{
@@ -33,6 +34,12 @@ export async function POST(request: Request) {
       limit: parseInt(body.limit.toString())
     }]
 
+    console.log('API request body:', apiRequestBody)
+
+    if (!process.env.DATAFORSEO_LOGIN || !process.env.DATAFORSEO_PASSWORD) {
+      throw new Error('DataForSEO credentials not configured')
+    }
+
     const auth = Buffer.from(`${process.env.DATAFORSEO_LOGIN}:${process.env.DATAFORSEO_PASSWORD}`).toString('base64')
 
     const response = await fetch(API_URL, {
@@ -44,14 +51,63 @@ export async function POST(request: Request) {
       body: JSON.stringify(apiRequestBody)
     })
 
+    const data = await response.json()
+    console.log('API response:', JSON.stringify(data, null, 2))
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    const data = await response.json()
-    return NextResponse.json(data)
+    if (data.status_code !== 20000) {
+      throw new Error(data.status_message || 'API Error')
+    }
+
+    // Validate the response structure
+    if (!data.tasks || !Array.isArray(data.tasks) || data.tasks.length === 0) {
+      throw new Error('Invalid API response structure: missing tasks array')
+    }
+
+    const task = data.tasks[0]
+    if (!task.result || !Array.isArray(task.result) || task.result.length === 0) {
+      throw new Error('Invalid API response structure: missing result array')
+    }
+
+    const result = task.result[0]
+    if (!result.items || !Array.isArray(result.items)) {
+      throw new Error('Invalid API response structure: missing items array')
+    }
+
+    // Transform the response to match our frontend expectations
+    const transformedData = {
+      status: data.status_code,
+      message: data.status_message,
+      data: result.items.map((item: any) => ({
+        keyword: item.keyword_data?.keyword || '',
+        keywordInfo: {
+          search_volume: item.keyword_data?.keyword_info?.search_volume || 0,
+          cpc: item.keyword_data?.keyword_info?.cpc || 0,
+          competition: item.keyword_data?.keyword_info?.competition || 0,
+          competition_level: item.keyword_data?.keyword_info?.competition_level || 'LOW'
+        },
+        relatedKeywords: item.keyword_data?.related_keywords || [],
+        monthlyData: (item.keyword_data?.keyword_info?.monthly_searches || []).map((search: any) => ({
+          month: `${search.year}-${String(search.month).padStart(2, '0')}`,
+          searchVolume: search.search_volume
+        }))
+      }))
+    }
+
+    console.log('Transformed response:', JSON.stringify(transformedData, null, 2))
+    return NextResponse.json(transformedData)
   } catch (error) {
-    console.error('Error in DataForSEO Labs API route:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('API Error:', error)
+    return NextResponse.json(
+      { 
+        status: 500,
+        message: error instanceof Error ? error.message : 'Failed to fetch keyword data',
+        data: []
+      },
+      { status: 500 }
+    )
   }
 }

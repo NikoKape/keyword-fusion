@@ -13,48 +13,7 @@ import {
 import { Globe, Languages, Layers, List, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
-
-// Mock API response
-const mockApiResponse = (keyword: string): ApiResponse => ({
-  keyword,
-  results: [
-    {
-      keyword: keyword,
-      search_volume: Math.floor(Math.random() * 100000),
-      cpc: Math.random() * 10,
-      competition: ["LOW", "MEDIUM", "HIGH"][Math.floor(Math.random() * 3)],
-      relevance: Math.random() * 100
-    },
-    {
-      keyword: keyword + " services",
-      search_volume: Math.floor(Math.random() * 50000),
-      cpc: Math.random() * 8,
-      competition: ["LOW", "MEDIUM", "HIGH"][Math.floor(Math.random() * 3)],
-      relevance: Math.random() * 100
-    },
-    {
-      keyword: "best " + keyword,
-      search_volume: Math.floor(Math.random() * 30000),
-      cpc: Math.random() * 12,
-      competition: ["LOW", "MEDIUM", "HIGH"][Math.floor(Math.random() * 3)],
-      relevance: Math.random() * 100
-    },
-    {
-      keyword: keyword + " near me",
-      search_volume: Math.floor(Math.random() * 20000),
-      cpc: Math.random() * 6,
-      competition: ["LOW", "MEDIUM", "HIGH"][Math.floor(Math.random() * 3)],
-      relevance: Math.random() * 100
-    },
-    {
-      keyword: keyword + " company",
-      search_volume: Math.floor(Math.random() * 15000),
-      cpc: Math.random() * 9,
-      competition: ["LOW", "MEDIUM", "HIGH"][Math.floor(Math.random() * 3)],
-      relevance: Math.random() * 100
-    }
-  ]
-})
+import { KeywordFormData } from '@/types/keywords'
 
 const ModernLoadingAnimation = () => {
   return (
@@ -99,54 +58,17 @@ const ModernLoadingAnimation = () => {
   )
 }
 
-interface LabsRequestBody {
-  keyword: string;
-  location_code: number;
-  language_code: string;
-  depth: number;
-  include_seed_keyword: boolean;
-  include_serp_info: boolean;
-  ignore_synonyms: boolean;
-  include_clickstream_data: boolean;
-  replace_with_core_keyword: boolean;
-  limit: number;
-}
-
-interface RelatedKeywordsProps {
-  onSubmitAction: (data: {
-    keyword: string
-    location_code: string
-    language_code: string
-    depth: string
-    limit: string
-    include_seed_keyword: boolean
-    include_serp_info: boolean
-    ignore_synonyms: boolean
-    include_clickstream_data: boolean
-    replace_with_core_keyword: boolean
-  }) => void
-}
-
 interface SelectOption {
   value: string
   label: string
 }
 
-interface KeywordResult {
-  keyword: string
-  search_volume: number
-  cpc: number
-  competition: string
-  relevance: number
-}
-
-interface ApiResponse {
-  keyword: string
-  results: KeywordResult[]
+interface RelatedKeywordsProps {
+  onSubmitAction: (data: KeywordFormData) => void
 }
 
 export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<KeywordFormData>({
     keyword: '',
     location_code: '2840',
     language_code: 'en',
@@ -159,6 +81,7 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
     replace_with_core_keyword: false
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [locationOptions, setLocationOptions] = useState<SelectOption[]>([
     { value: '2840', label: 'United States' }
   ])
@@ -180,7 +103,6 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           setLanguageOptions(data.languages)
           setLocationLanguages(data.locationLanguages)
 
-          // Set default values if current ones don't exist in new options
           setFormData(prev => {
             const locationExists = data.locations.some((loc: SelectOption) => loc.value === prev.location_code)
             const locationCode = locationExists ? prev.location_code : data.locations[0]?.value || '2840'
@@ -216,22 +138,12 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
     if (!formData.keyword) return
 
     setIsLoading(true)
+    setError(null)
+
     try {
-      const response = await fetch('/api/labs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data')
-      }
-
-      const data: ApiResponse = await response.json()
       onSubmitAction(formData)
     } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred')
       console.error('Error:', error)
     } finally {
       setIsLoading(false)
@@ -427,6 +339,12 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           onChange={(value) => setFormData(prev => ({ ...prev, limit: value }))}
         />
       </div>
+
+      {error && (
+        <div className="text-red-500 text-sm mt-2">
+          {error}
+        </div>
+      )}
     </form>
   )
 }
