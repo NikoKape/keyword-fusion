@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Download, TrendingUp, Zap, ArrowUpDown } from 'lucide-react'
+import { Download, TrendingUp, ArrowUpDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import {
   Select,
   SelectContent,
@@ -13,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts'
 
 interface KeywordResult {
   keyword: string
@@ -44,7 +53,6 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
     key: 'search_volume',
     direction: 'desc'
   })
-  const [chartMetric, setChartMetric] = useState<'search_volume' | 'cpc'>('search_volume')
   const [timeRange, setTimeRange] = useState<'1m' | '3m' | '6m' | '12m'>('12m')
 
   useEffect(() => {
@@ -58,8 +66,8 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
       const aValue = typeof a.keywordInfo[sortConfig.key as keyof typeof a.keywordInfo] === 'number'
         ? (a.keywordInfo[sortConfig.key as keyof typeof a.keywordInfo] as number)
         : 0
-      const bValue = typeof b.keywordInfo[sortConfig.key as keyof typeof b.keywordInfo] === 'number'
-        ? (b.keywordInfo[sortConfig.key as keyof typeof b.keywordInfo] as number)
+      const bValue = typeof b.keywordInfo[sortConfig.key as keyof typeof a.keywordInfo] === 'number'
+        ? (b.keywordInfo[sortConfig.key as keyof typeof a.keywordInfo] as number)
         : 0
       return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue
     })
@@ -109,13 +117,14 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
   }
 
   const exportToCsv = () => {
-    const headers = ['Keyword', 'Search Volume', 'CPC', 'Competition', 'Relevance']
+    if (!data?.data?.length) return
+
+    const headers = ['Keyword', 'Search Volume', 'CPC', 'Competition']
     const csvData = sortedResults.map(result => [
       result.keyword,
       result.keywordInfo.search_volume,
       result.keywordInfo.cpc,
-      result.keywordInfo.competition_level,
-      `${result.keywordInfo.competition}%`
+      result.keywordInfo.competition_level
     ])
 
     const csvContent = [
@@ -141,8 +150,15 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
     }
   }
 
-  if (!mounted) {
-    return null
+  if (!mounted) return null
+
+  const getCompetitionColor = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+      case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+      default: return ''
+    }
   }
 
   return (
@@ -197,7 +213,7 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
             <tbody>
               {sortedResults.map((result, index) => (
                 <tr
-                  key={index}
+                  key={result.keyword}
                   className={cn(
                     "border-t border-border",
                     index % 2 === 0 ? "bg-background" : "bg-muted/30"
@@ -219,9 +235,7 @@ export function RelatedKeywordsResults({ data }: RelatedKeywordsResultsProps) {
                   <td className="py-4 px-4">
                     <span className={cn(
                       "px-2 py-1 rounded-full text-xs font-medium",
-                      result.keywordInfo.competition_level === "HIGH" && "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                      result.keywordInfo.competition_level === "MEDIUM" && "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-                      result.keywordInfo.competition_level === "LOW" && "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                      getCompetitionColor(result.keywordInfo.competition_level)
                     )}>
                       {result.keywordInfo.competition_level.toLowerCase()}
                     </span>
