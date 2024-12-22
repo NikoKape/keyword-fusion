@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { ArrowUpDown, TrendingUp } from 'lucide-react'
+import { ArrowUpDown, TrendingUp, Download, BarChart2 } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -12,7 +15,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
-import { RawApiResponse, TransformedApiResponse, TransformedKeyword } from '@/types/keywords'
+import { RawApiResponse, TransformedApiResponse } from '@/types/keywords'
 
 interface RelatedKeywordsResultsProps {
   rawData: RawApiResponse
@@ -53,7 +56,6 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
     })) ?? []
   }
 
-  // Early return if no data
   if (!transformedData.data?.length) {
     return null
   }
@@ -92,23 +94,13 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
       })
     })
 
-    const sortedMonths = Array.from(allMonths).sort()
-
-    return sortedMonths.map(month => {
-      const entry: { [key: string]: number | string } = {
-        month
-      }
-
+    return Array.from(allMonths).sort().map(month => {
+      const entry: { [key: string]: number | string } = { month }
       selectedItems.forEach(item => {
         const monthData = item.monthlyData?.find(d => d.month === month)
         const searchVolume = monthData?.searchVolume
-        if (typeof searchVolume === 'number') {
-          entry[item.keyword] = searchVolume
-        } else {
-          entry[item.keyword] = 0
-        }
+        entry[item.keyword] = typeof searchVolume === 'number' ? searchVolume : 0
       })
-
       return entry
     })
   }
@@ -124,14 +116,22 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
   const getCompetitionColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-100 text-red-800 border-red-200'
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
       case 'low':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-100 text-green-800 border-green-200'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800 border-gray-200'
     }
+  }
+
+  const getDifficultyColor = (difficulty: number) => {
+    if (difficulty >= 80) return 'bg-red-100 text-red-800 border-red-200'
+    if (difficulty >= 60) return 'bg-orange-100 text-orange-800 border-orange-200'
+    if (difficulty >= 40) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+    if (difficulty >= 20) return 'bg-blue-100 text-blue-800 border-blue-200'
+    return 'bg-green-100 text-green-800 border-green-200'
   }
 
   const exportToCsv = () => {
@@ -165,54 +165,55 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
   const chartData = getChartData()
 
   return (
-    <div className="mt-8">
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-xl font-semibold">
-                Results for: <span className="text-primary">"{transformedData.data[0].keyword}"</span>
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Found {transformedData.data.length} related keywords
-              </p>
-            </div>
-            <Button onClick={exportToCsv}>Export to CSV</Button>
+    <Card className="mt-8">
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Results for <span className="text-primary">"{transformedData.data[0].keyword}"</span>
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Found {transformedData.data.length} related keywords
+            </p>
           </div>
+          <Button onClick={exportToCsv} variant="outline" className="gap-2">
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+        </div>
 
+        <ScrollArea className="rounded-md border">
           <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table className="w-full text-sm">
               <thead>
-                <tr>
+                <tr className="border-b bg-muted/50">
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center" onClick={() => requestSort('keyword')}>
+                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
                       KEYWORD <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center" onClick={() => requestSort('search_volume')}>
+                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
                       SEARCH VOLUME <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center" onClick={() => requestSort('difficulty')}>
+                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
                       DIFFICULTY <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center" onClick={() => requestSort('cpc')}>
+                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
                       CPC <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center" onClick={() => requestSort('competition')}>
+                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
                       COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    INTENT
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium">CHART</th>
+                  <th className="text-left py-3 px-4 font-medium">INTENT</th>
+                  <th className="text-left py-3 px-4 font-medium">TRENDS</th>
                 </tr>
               </thead>
               <tbody>
@@ -220,54 +221,66 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   <tr
                     key={result.keyword}
                     className={cn(
-                      "border-t border-border",
+                      "border-b transition-colors hover:bg-muted/50",
                       index % 2 === 0 ? "bg-background" : "bg-muted/30"
                     )}
                   >
-                    <td className="py-4 px-4">{result.keyword}</td>
+                    <td className="py-4 px-4 font-medium">{result.keyword}</td>
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-blue-500" />
+                      <div className="flex items-center gap-2 text-blue-600">
+                        <TrendingUp className="h-4 w-4" />
                         {result.keywordInfo.search_volume.toLocaleString()}
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="text-sm">
+                      <Badge 
+                        variant="outline" 
+                        className={cn(
+                          "font-mono",
+                          getDifficultyColor(result.keywordInfo.difficulty)
+                        )}
+                      >
                         {result.keywordInfo.difficulty}
-                      </div>
+                      </Badge>
                     </td>
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-1">
-                        <span className="mr-1">$</span>
+                      <div className="flex items-center gap-1 text-green-600 font-medium">
+                        <span>$</span>
                         {result.keywordInfo.cpc.toFixed(2)}
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <span className={cn(
-                        "px-2 py-1 rounded-full text-xs font-medium",
-                        getCompetitionColor(result.keywordInfo.competition_level)
-                      )}>
+                      <Badge 
+                        variant="outline"
+                        className={cn(
+                          "capitalize border",
+                          getCompetitionColor(result.keywordInfo.competition_level)
+                        )}
+                      >
                         {result.keywordInfo.competition_level.toLowerCase()}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="py-4 px-4">
                       <div className="text-sm">
-                        {result.keywordInfo.intent.main}
+                        <Badge variant="secondary" className="font-normal">
+                          {result.keywordInfo.intent.main}
+                        </Badge>
                         {result.keywordInfo.intent.foreign && (
-                          <span className="text-muted-foreground"> + {result.keywordInfo.intent.foreign.join(', ')}</span>
+                          <span className="ml-2 text-muted-foreground">
+                            + {result.keywordInfo.intent.foreign.join(', ')}
+                          </span>
                         )}
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <Button
-                        variant="outline"
+                        variant={selectedKeywords.includes(result.keyword) ? "default" : "outline"}
                         size="sm"
                         onClick={() => toggleKeywordSelection(result.keyword)}
-                        className={cn(
-                          selectedKeywords.includes(result.keyword) && "bg-primary text-primary-foreground hover:bg-primary/90"
-                        )}
+                        className="gap-2"
                       >
-                        {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add to Chart'}
+                        <BarChart2 className="h-4 w-4" />
+                        {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add'}
                       </Button>
                     </td>
                   </tr>
@@ -275,33 +288,52 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
               </tbody>
             </table>
           </div>
+        </ScrollArea>
 
-          {selectedKeywords.length > 0 && (
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Search Volume Trends</h3>
-              <div className="h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    {selectedKeywords.map((keyword, index) => (
-                      <Line
-                        key={keyword}
-                        type="monotone"
-                        dataKey={keyword}
-                        stroke={`hsl(${index * 360 / selectedKeywords.length}, 70%, 50%)`}
-                      />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+        {selectedKeywords.length > 0 && (
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Search Volume Trends</h3>
+              <Badge variant="secondary">
+                {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
+              </Badge>
             </div>
-          )}
-        </div>
+            <div className="h-[400px] mt-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-50" />
+                  <XAxis 
+                    dataKey="month"
+                    tick={{ fill: 'hsl(var(--foreground))' }}
+                  />
+                  <YAxis 
+                    tick={{ fill: 'hsl(var(--foreground))' }}
+                  />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--background))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '6px'
+                    }}
+                  />
+                  <Legend />
+                  {selectedKeywords.map((keyword, index) => (
+                    <Line
+                      key={keyword}
+                      type="monotone"
+                      dataKey={keyword}
+                      stroke={`hsl(${index * 360 / selectedKeywords.length}, 70%, 50%)`}
+                      strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 4 }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        )}
       </div>
-    </div>
+    </Card>
   )
 }
