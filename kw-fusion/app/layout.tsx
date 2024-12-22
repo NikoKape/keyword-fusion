@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
-import { Sidebar } from '@/components/Sidebar'
+import { ThemeProvider } from '@/components/ui/theme-provider'
+import { Sidebar } from '@/components/navigation/sidebar'
 import './globals.css'
 
 const inter = Inter({

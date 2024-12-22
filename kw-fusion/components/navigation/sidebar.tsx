@@ -12,12 +12,18 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
-const menuItems = [
+interface MenuItem {
+  name: string
+  icon: React.ElementType
+  href: string
+}
+
+const menuItems: MenuItem[] = [
   { name: 'Analytics', icon: BarChart, href: '/analytics' },
   { name: 'Domains', icon: Globe, href: '/domains' },
 ]
 
-const labItems = [
+const labItems: MenuItem[] = [
   { name: 'Related Keywords', icon: Search, href: '/' },
   { name: 'Keyword Clusters', icon: Network, href: '/labs/keyword-clusters' },
   { name: 'Content Ideas', icon: FileText, href: '/labs/content-ideas' },
