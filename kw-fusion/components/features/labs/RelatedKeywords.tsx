@@ -11,10 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Globe, Languages, Layers, List, Search, X } from 'lucide-react'
+import { Globe, Languages, Layers, List, Search, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { KeywordFormData } from '@/types/keywords'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 interface SelectOption {
   value: string
@@ -278,11 +285,9 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           label="Depth"
           value={formData.depth}
           options={[
-            { value: '0', label: 'Depth: 0' },
-            { value: '1', label: 'Depth: 1' },
-            { value: '2', label: 'Depth: 2' },
-            { value: '3', label: 'Depth: 3' },
-            { value: '4', label: 'Depth: 4' }
+            { value: '1', label: '1 Level' },
+            { value: '2', label: '2 Levels' },
+            { value: '3', label: '3 Levels' },
           ]}
           onChange={(value) => setFormData(prev => ({ ...prev, depth: value }))}
         />
@@ -291,13 +296,46 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           icon={List}
           label="Limit"
           value={formData.limit}
-          options={Array.from({ length: 10 }, (_, i) => ({
-            value: String((i + 1) * 10),
-            label: `Limit: ${(i + 1) * 10}`
-          }))}
+          options={[
+            { value: '10', label: '10 Results' },
+            { value: '20', label: '20 Results' },
+            { value: '50', label: '50 Results' },
+            { value: '100', label: '100 Results' },
+          ]}
           onChange={(value) => setFormData(prev => ({ ...prev, limit: value }))}
         />
       </div>
+
+      <Collapsible className="w-full space-y-2 mt-6">
+        <CollapsibleTrigger className="w-full">
+          <div className="flex items-center justify-center gap-3 group">
+            <div className="h-px flex-1 bg-muted-foreground/20 group-hover:bg-muted-foreground/30 transition-colors" />
+            <span className="text-xs uppercase tracking-wider text-muted-foreground/50 group-hover:text-muted-foreground/70 transition-colors flex items-center gap-2">
+              Advanced Options
+              <ChevronDown className="h-3 w-3 transition-transform duration-200 opacity-50" />
+            </span>
+            <div className="h-px flex-1 bg-muted-foreground/20 group-hover:bg-muted-foreground/30 transition-colors" />
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-4 pt-4">
+          <div className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+            <div className="space-y-1">
+              <Label htmlFor="ignore-synonyms" className="text-sm font-medium">Ignore Synonyms</Label>
+              <p className="text-sm text-muted-foreground">
+                When enabled, synonymous keywords will be filtered out from the results
+              </p>
+            </div>
+            <Switch
+              id="ignore-synonyms"
+              checked={formData.ignore_synonyms}
+              onCheckedChange={(checked) => 
+                setFormData(prev => ({ ...prev, ignore_synonyms: checked }))
+              }
+              className="data-[state=checked]:bg-primary"
+            />
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {error && (
         <div className="text-red-500 text-sm mt-2">
