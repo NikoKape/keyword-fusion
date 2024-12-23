@@ -115,9 +115,6 @@ function ModelSettings({
             <span>Balanced</span>
             <span>Maximum Creativity</span>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            Lower values (0.1-0.3) provide more focused, accurate responses. Higher values (0.7-1.0) encourage more creative, diverse outputs.
-          </p>
         </div>
       </div>
     </>
@@ -202,10 +199,15 @@ This is a placeholder response. In a real application, this would be replaced wi
             {!isAISettingsOpen && (
               <div className="flex gap-2">
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
-                  {settings.selectedProvider}
+                  {settings.selectedProvider === "openai" ? "OpenAI" :
+                   settings.selectedProvider === "anthropic" ? "Anthropic" : "Google"}
                 </span>
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
-                  {settings.selectedModel}
+                  {settings.selectedModel === "openai/gpt-4o-2024-11-20" ? "GPT4o" :
+                   settings.selectedModel === "openai/o1" ? "GPTo1" :
+                   settings.selectedModel === "anthropic/claude-3.5-sonnet" ? "Claude 3.5 Sonnet" :
+                   settings.selectedModel === "google/gemini-pro-1.5" ? "Gemini Pro 1.5" :
+                   "Gemini Flash 2.0"}
                 </span>
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
                   T: {settings.temperature}
@@ -276,16 +278,23 @@ This is a placeholder response. In a real application, this would be replaced wi
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="custom" className="space-y-4">
-            <div className="space-y-4">
-              <ModelSettings
-                selectedProvider={settings.selectedProvider}
-                selectedModel={settings.selectedModel}
-                temperature={settings.temperature}
-                setSelectedModelAction={setSelectedModel}
-                setTemperatureAction={setTemperature}
-                updateProviderAndModelAction={updateProviderAndModel}
-              />
+          <TabsContent value="custom">
+            <div className="space-y-4 mb-6">
+              <div>
+                <Label htmlFor="system-prompt" className="text-foreground">System Prompt</Label>
+                <Textarea
+                  id="system-prompt"
+                  placeholder="Enter a system prompt to guide the AI's behavior"
+                  value={systemPrompt}
+                  onChange={(e) => {
+                    setSystemPrompt(e.target.value)
+                    e.target.style.height = 'auto'
+                    e.target.style.height = `${e.target.scrollHeight}px`
+                  }}
+                  className="mt-1.5 bg-background/50 hover:bg-background focus:bg-background transition-colors min-h-[100px] w-full"
+                  style={{ resize: 'none', overflow: 'hidden' }}
+                />
+              </div>
             </div>
           </TabsContent>
         </Tabs>
