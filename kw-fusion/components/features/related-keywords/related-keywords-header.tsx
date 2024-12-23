@@ -43,17 +43,31 @@ export function RelatedKeywordsHeader() {
               </TooltipTrigger>
               <TooltipContent 
                 side="right"
-                className="max-w-[400px] p-4"
+                className="max-w-[350px] p-5 rounded-lg shadow-lg"
                 sideOffset={5}
               >
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-sm mb-2">Related Keywords Feature (Labs)</h4>
-                  <ul className="list-disc pl-4 space-y-1 text-sm">
-                    <li>Discover related keyword opportunities</li>
-                    <li>Analyze search volume and trends</li>
-                    <li>Explore keyword variations</li>
-                    <li>Get AI-powered insights for SEO and PPC</li>
-                    <li>Part of our experimental Labs section</li>
+                <div className="space-y-4">
+                  <ul className="space-y-3">
+                    <li className="flex flex-col">
+                      <span className="font-semibold text-purple-500">Explore Up to 4,680 Keywords</span>
+                      <span className="text-sm text-muted-foreground">Discover a wide range of related search terms</span>
+                    </li>
+                    <li className="flex flex-col">
+                      <span className="font-semibold text-purple-500">Analyze Trends</span>
+                      <span className="text-sm text-muted-foreground">Gain insights with monthly and 12-month search trends</span>
+                    </li>
+                    <li className="flex flex-col">
+                      <span className="font-semibold text-purple-500">Performance Metrics</span>
+                      <span className="text-sm text-muted-foreground">View daily impressions, clicks, and CPC estimates</span>
+                    </li>
+                    <li className="flex flex-col">
+                      <span className="font-semibold text-purple-500">Competition Insights</span>
+                      <span className="text-sm text-muted-foreground">Understand keyword competitiveness to refine strategies</span>
+                    </li>
+                    <li className="flex flex-col">
+                      <span className="font-semibold text-purple-500">Depth-Based Search</span>
+                      <span className="text-sm text-muted-foreground">Adjust search depth to uncover niche and long-tail keywords</span>
+                    </li>
                   </ul>
                 </div>
               </TooltipContent>
