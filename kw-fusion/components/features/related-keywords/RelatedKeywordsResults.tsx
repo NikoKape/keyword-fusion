@@ -204,10 +204,29 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
             <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
+                  <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    stroke="rgba(255,255,255,0.12)" 
+                  />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="rgba(136,136,136,0.85)" 
+                    fontSize={12}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    stroke="rgba(136,136,136,0.85)" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--background))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "6px",
+                    }}
+                  />
                   <Legend />
                   {selectedKeywords.map((keyword, index) => (
                     <Line
@@ -216,6 +235,8 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       dataKey={keyword}
                       stroke={`hsl(${index * (360 / selectedKeywords.length)}, 70%, 50%)`}
                       strokeWidth={2}
+                      dot={false}
+                      activeDot={{ r: 4 }}
                     />
                   ))}
                 </LineChart>
