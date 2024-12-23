@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { ArrowUpDown, TrendingUp, Download, BarChart2 } from 'lucide-react'
+import { ArrowUpDown, Activity, Download, BarChart2 } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -182,6 +182,37 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           </Button>
         </div>
 
+        {selectedKeywords.length > 0 && (
+          <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Search Volume Trends</h3>
+              <Badge variant="secondary">
+                {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
+              </Badge>
+            </div>
+            <div className="h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  {selectedKeywords.map((keyword, index) => (
+                    <Line
+                      key={keyword}
+                      type="monotone"
+                      dataKey={keyword}
+                      stroke={`hsl(${index * (360 / selectedKeywords.length)}, 70%, 50%)`}
+                      strokeWidth={2}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        )}
+
         <ScrollArea className="rounded-md border">
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
@@ -227,8 +258,8 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   >
                     <td className="py-4 px-4 font-medium">{result.keyword}</td>
                     <td className="py-4 px-4 text-center">
-                      <div className="flex items-center justify-center gap-2 text-blue-600">
-                        <TrendingUp className="h-4 w-4" />
+                      <div className="flex items-center justify-center gap-2 text-blue-400 dark:text-blue-300">
+                        <Activity className="h-4 w-4" />
                         {result.keywordInfo.search_volume.toLocaleString()}
                       </div>
                     </td>
@@ -300,50 +331,6 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
             </table>
           </div>
         </ScrollArea>
-
-        {selectedKeywords.length > 0 && (
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Search Volume Trends</h3>
-              <Badge variant="secondary">
-                {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
-              </Badge>
-            </div>
-            <div className="h-[400px] mt-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" className="opacity-50" />
-                  <XAxis 
-                    dataKey="month"
-                    tick={{ fill: 'hsl(var(--foreground))' }}
-                  />
-                  <YAxis 
-                    tick={{ fill: 'hsl(var(--foreground))' }}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: 'hsl(var(--background))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '6px'
-                    }}
-                  />
-                  <Legend />
-                  {selectedKeywords.map((keyword, index) => (
-                    <Line
-                      key={keyword}
-                      type="monotone"
-                      dataKey={keyword}
-                      stroke={`hsl(${index * 360 / selectedKeywords.length}, 70%, 50%)`}
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{ r: 4 }}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        )}
       </div>
     </Card>
   )
