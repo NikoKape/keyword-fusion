@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { RelatedKeywords } from '@/components/features/labs/RelatedKeywords'
-import { RelatedKeywordsResults } from '@/components/features/labs/RelatedKeywordsResults'
-import { RelatedKeywordsHeader } from '@/components/features/labs/related-keywords-header'
+import { RelatedKeywords } from '@/components/features/related-keywords/RelatedKeywords'
+import { RelatedKeywordsResults } from '@/components/features/related-keywords/RelatedKeywordsResults'
+import { RelatedKeywordsHeader } from '@/components/features/related-keywords/related-keywords-header'
 import { KeywordFusion } from '@/components/shared/KeywordFusion'
 import { KeywordFormData, RawApiResponse } from '@/types/keywords'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
