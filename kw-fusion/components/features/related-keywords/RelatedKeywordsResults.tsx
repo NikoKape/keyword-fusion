@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { ArrowUpDown, Activity, Download, BarChart2 } from 'lucide-react'
+import { ArrowUpDown, Activity, Download, BarChart2, Plus, Minus } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -256,7 +256,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   </th>
                   <th className="text-center py-3 px-4 font-medium">CPC RANGE</th>
                   <th className="text-center py-3 px-4 font-medium">INTENT</th>
-                  <th className="text-center py-3 px-4 font-medium">ACTIONS</th>
+                  <th className="text-center py-3 px-4 font-medium">PLOT</th>
                 </tr>
               </thead>
               <tbody>
@@ -331,7 +331,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       <div className="flex flex-col items-center justify-center gap-1">
                         <Badge 
                           variant="outline" 
-                          className="border-primary/30 bg-primary/5 text-primary font-medium"
+                          className="border-blue-200/60 bg-blue-50/30 text-blue-500 dark:border-blue-700/40 dark:bg-blue-900/20 dark:text-blue-300 font-medium"
                         >
                           {result.keywordInfo.intent.main}
                         </Badge>
@@ -339,7 +339,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                           <Badge 
                             key={index}
                             variant="outline"
-                            className="border-muted-foreground/20 text-muted-foreground text-[11px] px-2 py-0"
+                            className="border-blue-100/50 bg-blue-50/20 text-blue-400/90 dark:border-blue-800/30 dark:bg-blue-900/10 dark:text-blue-400 text-[11px] px-2 py-0"
                           >
                             {foreignIntent}
                           </Badge>
@@ -349,18 +349,25 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     <td className="py-4 px-4 text-center">
                       <div className="flex justify-center">
                         <Button
-                          variant={selectedKeywords.includes(result.keyword) ? "outline" : "outline"}
-                          size="sm"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => toggleKeywordSelection(result.keyword)}
                           className={cn(
-                            "gap-2",
+                            "h-8 w-8 transition-colors",
                             selectedKeywords.includes(result.keyword) 
-                              ? "hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 hover:border-red-300" 
-                              : ""
+                              ? "text-muted-foreground bg-red-500/10 hover:bg-red-500/20" 
+                              : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
                           )}
+                          title={`${selectedKeywords.includes(result.keyword) ? 'Remove from' : 'Add to'} plot`}
                         >
-                          <BarChart2 className="h-4 w-4" />
-                          {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add'}
+                          {selectedKeywords.includes(result.keyword) ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="sr-only">
+                            {selectedKeywords.includes(result.keyword) ? 'Remove from' : 'Add to'} plot
+                          </span>
                         </Button>
                       </div>
                     </td>
