@@ -115,6 +115,14 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
     )
   }
 
+  const selectAllKeywords = () => {
+    setSelectedKeywords(sortedResults.map(result => result.keyword))
+  }
+
+  const clearAllKeywords = () => {
+    setSelectedKeywords([])
+  }
+
   const getCompetitionColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'high':
@@ -197,11 +205,33 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Search Volume Trends</h3>
-              <Badge variant="secondary">
-                {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="h-6">
+                  {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
+                </Badge>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={selectAllKeywords}
+                    className="h-6 px-2 text-xs"
+                    disabled={selectedKeywords.length === sortedResults.length}
+                  >
+                    Select All
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllKeywords}
+                    className="h-6 px-2 text-xs"
+                    disabled={selectedKeywords.length === 0}
+                  >
+                    Clear All
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="h-[400px] relative z-10">
+            <div className="h-[500px] relative z-10">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid 
