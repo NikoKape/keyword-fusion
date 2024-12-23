@@ -315,13 +315,13 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
-                      COMPETITION <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
+                      DIFFICULTY <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
-                      DIFFICULTY <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                      COMPETITION <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
@@ -365,19 +365,6 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     <td className="py-4 px-4 text-center">
                       <div className="flex justify-center">
                         <Badge 
-                          variant="outline"
-                          className={cn(
-                            "capitalize border",
-                            getCompetitionColor(result.keywordInfo.competition_level)
-                          )}
-                        >
-                          {result.keywordInfo.competition_level.toLowerCase()}
-                        </Badge>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="flex justify-center">
-                        <Badge 
                           variant="outline" 
                           className={cn(
                             "font-mono",
@@ -385,6 +372,19 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                           )}
                         >
                           {result.keywordInfo.difficulty}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex justify-center">
+                        <Badge 
+                          variant="outline"
+                          className={cn(
+                            "capitalize border",
+                            getCompetitionColor(result.keywordInfo.competition_level)
+                          )}
+                        >
+                          {result.keywordInfo.competition_level.toLowerCase()}
                         </Badge>
                       </div>
                     </td>
