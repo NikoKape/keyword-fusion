@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Brain, Zap, TrendingUp, DollarSign, Users, BarChart2, Search, Target, Globe, ArrowRight, LineChart, FileText, Link, Share2, Maximize2, MousePointer2, Megaphone, PieChart, Coins, ChevronDown, ChevronUp } from 'lucide-react'
+import { useModelSettings } from '@/lib/hooks/useModelSettings'
 
 const seoPrompts = [
   { icon: TrendingUp, label: "Trend Analysis" },
@@ -39,6 +40,90 @@ interface KeywordFusionProps {
   keywords: string[]
 }
 
+interface ModelSettingsProps {
+  selectedProvider: string
+  selectedModel: string
+  temperature: string
+  setSelectedModelAction: (model: string) => void
+  setTemperatureAction: (temp: string) => void
+  updateProviderAndModelAction: (provider: string) => void
+}
+
+function ModelSettings({
+  selectedProvider,
+  selectedModel,
+  temperature,
+  setSelectedModelAction,
+  setTemperatureAction,
+  updateProviderAndModelAction,
+}: ModelSettingsProps) {
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm mb-2 block">Select Provider</label>
+          <Select value={selectedProvider} onValueChange={updateProviderAndModelAction}>
+            <SelectTrigger className="bg-white dark:bg-[#141414] border-gray-300 dark:border-[#2C2C2C]">
+              <SelectValue placeholder="Select provider" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-[#141414] border-gray-300 dark:border-[#2C2C2C]">
+              <SelectItem value="openai">OpenAI</SelectItem>
+              <SelectItem value="anthropic">Anthropic</SelectItem>
+              <SelectItem value="google">Google</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <label className="text-sm mb-2 block">Select Model</label>
+          <Select value={selectedModel} onValueChange={setSelectedModelAction}>
+            <SelectTrigger className="bg-white dark:bg-[#141414] border-gray-300 dark:border-[#2C2C2C]">
+              <SelectValue placeholder="Select model" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-[#141414] border-gray-300 dark:border-[#2C2C2C]">
+              {selectedProvider === "openai" ? (
+                <>
+                  <SelectItem value="openai/gpt-4o-2024-11-20">GPT4o</SelectItem>
+                  <SelectItem value="openai/o1">GPTo1</SelectItem>
+                </>
+              ) : selectedProvider === "anthropic" ? (
+                <SelectItem value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</SelectItem>
+              ) : (
+                <>
+                  <SelectItem value="google/gemini-pro-1.5">Gemini Pro 1.5</SelectItem>
+                  <SelectItem value="google/gemini-2.0-flash-exp:free">Gemini Flash 2.0 Experimental</SelectItem>
+                </>
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="mt-4">
+        <div className="flex justify-between items-center mb-2">
+          <label className="text-sm">Temperature (Accuracy vs Creativity)</label>
+          <span className="text-sm font-mono bg-muted px-2 py-1 rounded">{temperature}</span>
+        </div>
+        <div className="space-y-4">
+          <Slider
+            defaultValue={[parseFloat(temperature)]}
+            max={1}
+            min={0}
+            step={0.1}
+            onValueChange={(value) => setTemperatureAction(value[0].toString())}
+          />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>Maximum Accuracy</span>
+            <span>Balanced</span>
+            <span>Maximum Creativity</span>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Lower values (0.1-0.3) provide more focused, accurate responses. Higher values (0.7-1.0) encourage more creative, diverse outputs.
+          </p>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
   const [mounted, setMounted] = useState(false)
   const [userInput, setUserInput] = useState('')
@@ -46,9 +131,7 @@ export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
   const [aiResponse, setAiResponse] = useState('')
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([])
   const [isAISettingsOpen, setIsAISettingsOpen] = useState(false)
-  const [aiProvider, setAiProvider] = useState('openai')
-  const [aiModel, setAiModel] = useState('gpt-3.5-turbo')
-  const [temperature, setTemperature] = useState(0.7)
+  const { settings, setSelectedProvider, setSelectedModel, setTemperature, updateProviderAndModel } = useModelSettings()
 
   useEffect(() => {
     setMounted(true)
@@ -76,9 +159,9 @@ export function KeywordFusion({ keywords = [] }: KeywordFusionProps) {
 User Prompt: "${userInput}"
 System Prompt: "${systemPrompt}"
 Selected keywords: ${selectedKeywords.join(', ')}
-AI Provider: ${aiProvider}
-AI Model: ${aiModel}
-Temperature: ${temperature}
+AI Provider: ${settings.selectedProvider}
+AI Model: ${settings.selectedModel}
+Temperature: ${settings.temperature}
 
 This is a placeholder response. In a real application, this would be replaced with actual AI-generated content based on the user input, system prompt, selected keywords, and AI settings.`)
   }
@@ -119,57 +202,26 @@ This is a placeholder response. In a real application, this would be replaced wi
             {!isAISettingsOpen && (
               <div className="flex gap-2">
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
-                  {aiProvider}
+                  {settings.selectedProvider}
                 </span>
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
-                  {aiModel}
+                  {settings.selectedModel}
                 </span>
                 <span className="bg-gradient-to-r from-muted/80 to-muted text-foreground px-3 py-1 rounded-full text-xs border shadow-sm">
-                  T: {temperature}
+                  T: {settings.temperature}
                 </span>
               </div>
             )}
           </div>
           <CollapsibleContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="space-y-2">
-                <Label htmlFor="ai-provider">AI Provider</Label>
-                <Select value={aiProvider} onValueChange={setAiProvider}>
-                  <SelectTrigger id="ai-provider">
-                    <SelectValue placeholder="Select provider" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="anthropic">Anthropic</SelectItem>
-                    <SelectItem value="cohere">Cohere</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="ai-model">AI Model</Label>
-                <Select value={aiModel} onValueChange={setAiModel}>
-                  <SelectTrigger id="ai-model">
-                    <SelectValue placeholder="Select model" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
-                    <SelectItem value="gpt-4">GPT-4</SelectItem>
-                    <SelectItem value="claude-v1">Claude v1</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="temperature">Temperature: {temperature}</Label>
-                <Slider
-                  id="temperature"
-                  min={0}
-                  max={1}
-                  step={0.1}
-                  value={[temperature]}
-                  onValueChange={(value) => setTemperature(value[0])}
-                />
-              </div>
-            </div>
+            <ModelSettings
+              selectedProvider={settings.selectedProvider}
+              selectedModel={settings.selectedModel}
+              temperature={settings.temperature}
+              setSelectedModelAction={setSelectedModel}
+              setTemperatureAction={setTemperature}
+              updateProviderAndModelAction={updateProviderAndModel}
+            />
           </CollapsibleContent>
         </Collapsible>
 
@@ -224,26 +276,16 @@ This is a placeholder response. In a real application, this would be replaced wi
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="custom">
-            <div className="space-y-4 mb-6">
-              <div>
-                <Label htmlFor="system-prompt" className="text-foreground">System Prompt</Label>
-                <Textarea
-                  id="system-prompt"
-                  placeholder="Enter a system prompt to guide the AI's behavior"
-                  value={systemPrompt}
-                  onChange={(e) => {
-                    setSystemPrompt(e.target.value)
-                    e.target.style.height = 'auto'
-                    e.target.style.height = `${e.target.scrollHeight}px`
-                  }}
-                  className="mt-1.5 bg-background/50 hover:bg-background focus:bg-background transition-colors min-h-[100px] w-full"
-                  style={{ resize: 'none', overflow: 'hidden' }}
-                />
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Create your own custom system prompt to guide the AI's behavior and responses. This allows for more specialized and targeted analysis of your keywords.
-                </p>
-              </div>
+          <TabsContent value="custom" className="space-y-4">
+            <div className="space-y-4">
+              <ModelSettings
+                selectedProvider={settings.selectedProvider}
+                selectedModel={settings.selectedModel}
+                temperature={settings.temperature}
+                setSelectedModelAction={setSelectedModel}
+                setTemperatureAction={setTemperature}
+                updateProviderAndModelAction={updateProviderAndModel}
+              />
             </div>
           </TabsContent>
         </Tabs>
