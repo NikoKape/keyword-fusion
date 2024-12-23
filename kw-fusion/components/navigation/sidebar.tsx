@@ -25,8 +25,8 @@ const menuItems: MenuItem[] = [
 
 const labItems: MenuItem[] = [
   { name: 'Related Keywords', icon: Search, href: '/' },
-  { name: 'Keyword Clusters', icon: Network, href: '/labs/keyword-clusters' },
-  { name: 'Content Ideas', icon: FileText, href: '/labs/content-ideas' },
+  { name: 'Keyword Ideas', icon: Network, href: '/labs/keyword-ideas' },
+  { name: 'Keyword Suggestions', icon: FileText, href: '/labs/keyword-suggestions' },
 ]
 
 export function Sidebar() {
