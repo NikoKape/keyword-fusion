@@ -43,7 +43,7 @@ export function Sidebar() {
   }
 
   return (
-    <aside className={`bg-background border-r border-border transition-all duration-300 ${expanded ? 'w-64' : 'w-20'}`}>
+    <aside className={`bg-background border-r border-border transition-all duration-300 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.15)] dark:shadow-[4px_0_24px_-12px_rgba(255,255,255,0.05)] relative before:absolute before:right-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-gradient-to-b before:from-border/50 before:via-border before:to-border/50 ${expanded ? 'w-64' : 'w-20'}`}>
       <div className="flex flex-col h-full p-4">
         <div className="flex justify-between items-center mb-6">
           <Button
