@@ -281,35 +281,35 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b bg-muted/50">
+                <tr className="bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 border-b">
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
-                      KEYWORD <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
+                      KEYWORD <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
-                      SEARCH VOLUME <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
+                      SEARCH VOLUME <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
-                      COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                      COMPETITION <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
-                      DIFFICULTY <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
+                      DIFFICULTY <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
-                      CPC <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
+                      CPC <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
-                  <th className="text-center py-3 px-4 font-medium">CPC RANGE</th>
-                  <th className="text-center py-3 px-4 font-medium">INTENT</th>
-                  <th className="text-center py-3 px-4 font-medium">PLOT</th>
+                  <th className="text-center py-3 px-4 font-medium text-xs tracking-wider text-muted-foreground/90">CPC RANGE</th>
+                  <th className="text-center py-3 px-4 font-medium text-xs tracking-wider text-muted-foreground/90">INTENT</th>
+                  <th className="text-center py-3 px-4 font-medium text-xs tracking-wider text-muted-foreground/90">PLOT</th>
                 </tr>
               </thead>
               <tbody>
