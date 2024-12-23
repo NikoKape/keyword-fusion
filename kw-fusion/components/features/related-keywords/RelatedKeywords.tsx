@@ -202,8 +202,21 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           onChange={(e) => setFormData(prev => ({ ...prev, keyword: e.target.value }))}
           placeholder="Enter keyword for related terms..."
           className={cn(
-            "h-14 pl-12 pr-24 text-lg bg-component border-input",
-            "placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            "h-14 pl-12 pr-24 text-lg rounded-2xl bg-gradient-to-br from-white/90 via-white/80 to-background/90",
+            "border border-border/30 relative",
+            "before:absolute before:inset-0 before:rounded-2xl before:border before:border-white/60 before:bg-gradient-to-b before:from-white/80 before:to-white/40 before:-z-10",
+            "after:absolute after:inset-0 after:rounded-2xl after:bg-gradient-to-t after:from-white/40 after:to-white/10 after:-z-20",
+            "[box-shadow:0_2px_4px_rgba(0,0,0,0.02),0_1px_6px_rgba(0,0,0,0.03),inset_0_0_32px_rgba(255,255,255,0.9)]",
+            "dark:bg-gradient-to-br dark:from-background/80 dark:via-muted/30 dark:to-background/90",
+            "dark:border-border/30 dark:before:border-white/[0.08]",
+            "dark:after:bg-gradient-to-t dark:after:from-white/[0.08] dark:after:to-white/[0.02]",
+            "dark:[box-shadow:0_0_0_1px_rgba(255,255,255,0.08),inset_0_0_32px_rgba(255,255,255,0.06)]",
+            "placeholder:text-muted-foreground/60",
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+            "focus-visible:border-ring/50",
+            "dark:focus-visible:ring-ring dark:focus-visible:border-ring",
+            "dark:focus-visible:ring-offset-background",
+            "transition-all duration-200 ease-out"
           )}
         />
         <svg
