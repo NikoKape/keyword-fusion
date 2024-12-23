@@ -274,10 +274,15 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     </td>
                     <td className="py-4 px-4">
                       <Button
-                        variant={selectedKeywords.includes(result.keyword) ? "default" : "outline"}
+                        variant={selectedKeywords.includes(result.keyword) ? "outline" : "outline"}
                         size="sm"
                         onClick={() => toggleKeywordSelection(result.keyword)}
-                        className="gap-2"
+                        className={cn(
+                          "gap-2",
+                          selectedKeywords.includes(result.keyword) 
+                            ? "hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 hover:border-red-300" 
+                            : ""
+                        )}
                       >
                         <BarChart2 className="h-4 w-4" />
                         {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add'}
