@@ -99,7 +99,7 @@ function ModelSettings({
       </div>
       <div className="mt-4">
         <div className="flex justify-between items-center mb-2">
-          <label className="text-sm">Temperature (Accuracy vs Creativity)</label>
+          <label className="text-sm">Temperature</label>
           <span className="text-sm font-mono bg-muted px-2 py-1 rounded">{temperature}</span>
         </div>
         <div className="space-y-4">
