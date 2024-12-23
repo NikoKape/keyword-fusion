@@ -11,8 +11,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Keyword Planner',
-  description: 'SEO and PPC Research Tool',
+  title: 'Keyword Fusion',
+  description: 'Keyword Research Tool',
   // Add more metadata for better SEO
 }
 
