@@ -118,22 +118,30 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
   const getCompetitionColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case 'high':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'bg-red-50 border-red-200 text-red-700 dark:bg-red-950 dark:border-red-800 dark:text-red-300'
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300'
       case 'low':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300'
     }
   }
 
   const getDifficultyColor = (difficulty: number) => {
-    if (difficulty >= 80) return 'bg-red-100 text-red-800 border-red-200'
-    if (difficulty >= 60) return 'bg-orange-100 text-orange-800 border-orange-200'
-    if (difficulty >= 40) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-    if (difficulty >= 20) return 'bg-blue-100 text-blue-800 border-blue-200'
-    return 'bg-green-100 text-green-800 border-green-200'
+    if (difficulty >= 80) {
+      return 'bg-red-50 border-red-200 text-red-700 dark:bg-red-950 dark:border-red-800 dark:text-red-300'
+    }
+    if (difficulty >= 60) {
+      return 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950 dark:border-amber-800 dark:text-amber-300'
+    }
+    if (difficulty >= 40) {
+      return 'bg-yellow-50 border-yellow-200 text-yellow-700 dark:bg-yellow-950 dark:border-yellow-800 dark:text-yellow-300'
+    }
+    if (difficulty >= 20) {
+      return 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300'
+    }
+    return 'bg-teal-50 border-teal-200 text-teal-700 dark:bg-teal-950 dark:border-teal-800 dark:text-teal-300'
   }
 
   const exportToCsv = () => {
@@ -232,13 +240,13 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
-                      DIFFICULTY <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                      COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
-                      COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
+                      DIFFICULTY <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
@@ -248,7 +256,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   </th>
                   <th className="text-center py-3 px-4 font-medium">CPC RANGE</th>
                   <th className="text-center py-3 px-4 font-medium">INTENT</th>
-                  <th className="text-center py-3 px-4 font-medium">TRENDS</th>
+                  <th className="text-center py-3 px-4 font-medium">ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
@@ -270,19 +278,6 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     <td className="py-4 px-4 text-center">
                       <div className="flex justify-center">
                         <Badge 
-                          variant="outline" 
-                          className={cn(
-                            "font-mono",
-                            getDifficultyColor(result.keywordInfo.difficulty)
-                          )}
-                        >
-                          {result.keywordInfo.difficulty}
-                        </Badge>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="flex justify-center">
-                        <Badge 
                           variant="outline"
                           className={cn(
                             "capitalize border",
@@ -290,6 +285,19 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                           )}
                         >
                           {result.keywordInfo.competition_level.toLowerCase()}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex justify-center">
+                        <Badge 
+                          variant="outline" 
+                          className={cn(
+                            "font-mono",
+                            getDifficultyColor(result.keywordInfo.difficulty)
+                          )}
+                        >
+                          {result.keywordInfo.difficulty}
                         </Badge>
                       </div>
                     </td>
@@ -320,15 +328,22 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       )}
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="flex flex-col items-center justify-center text-sm">
-                        <Badge variant="secondary" className="font-normal">
+                      <div className="flex flex-col items-center justify-center gap-1">
+                        <Badge 
+                          variant="outline" 
+                          className="border-primary/30 bg-primary/5 text-primary font-medium"
+                        >
                           {result.keywordInfo.intent.main}
                         </Badge>
-                        {result.keywordInfo.intent.foreign && (
-                          <span className="mt-1 text-muted-foreground">
-                            + {result.keywordInfo.intent.foreign.join(', ')}
-                          </span>
-                        )}
+                        {result.keywordInfo.intent.foreign?.map((foreignIntent, index) => (
+                          <Badge 
+                            key={index}
+                            variant="outline"
+                            className="border-muted-foreground/20 text-muted-foreground text-[11px] px-2 py-0"
+                          >
+                            {foreignIntent}
+                          </Badge>
+                        ))}
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
