@@ -201,7 +201,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                 {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
               </Badge>
             </div>
-            <div className="h-[400px]">
+            <div className="h-[400px] relative z-10">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid 
@@ -221,10 +221,12 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     axisLine={false}
                   />
                   <Tooltip
+                    wrapperStyle={{ zIndex: 50 }}
                     contentStyle={{
                       backgroundColor: "hsl(var(--background))",
                       border: "1px solid hsl(var(--border))",
                       borderRadius: "6px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
                     }}
                   />
                   <Legend />
@@ -245,7 +247,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           </Card>
         )}
 
-        <ScrollArea className="rounded-md border">
+        <ScrollArea className="rounded-md border relative z-0">
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
