@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
-import { ArrowUpDown, Activity, Download, BarChart2, Plus, Minus } from 'lucide-react'
+import { ArrowUpDown, Activity, Download, BarChart2, Plus, Minus, LineChart as LineChartIcon } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -203,8 +203,8 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
 
         {selectedKeywords.length > 0 && (
           <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Search Volume Trends</h3>
+            <div className="flex items-center justify-between p-6 mb-4">
+              <h3 className="text-lg font-medium tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Search Volume Trends</h3>
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="h-6">
                   {selectedKeywords.length} keyword{selectedKeywords.length > 1 ? 's' : ''} selected
@@ -277,7 +277,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           </Card>
         )}
 
-        <ScrollArea className="rounded-md border relative z-0">
+        <ScrollArea className="rounded-md border">
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -317,11 +317,23 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   <tr
                     key={result.keyword}
                     className={cn(
-                      "border-b transition-colors hover:bg-muted/50",
-                      index % 2 === 0 ? "bg-background" : "bg-muted/30"
+                      "border-b border-border/40 transition-colors",
+                      index % 2 === 0 ? "bg-muted/[0.07]" : "bg-muted/[0.15]",
+                      selectedKeywords.includes(result.keyword) && "bg-primary/[0.03] hover:bg-primary/[0.06]",
+                      !selectedKeywords.includes(result.keyword) && "hover:bg-zinc-500/[0.08]",
+                      "group"
                     )}
                   >
-                    <td className="py-4 px-4 font-medium">{result.keyword}</td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{result.keyword}</span>
+                        {selectedKeywords.includes(result.keyword) && (
+                          <Badge variant="secondary" className="h-5 px-1.5 text-xs bg-primary/10 text-primary border-primary/20">
+                            Plotting
+                          </Badge>
+                        )}
+                      </div>
+                    </td>
                     <td className="py-4 px-4 text-center">
                       <div className="flex items-center justify-center gap-2 text-blue-400 dark:text-blue-300">
                         <Activity className="h-4 w-4" />
@@ -406,18 +418,14 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                           size="icon"
                           onClick={() => toggleKeywordSelection(result.keyword)}
                           className={cn(
-                            "h-8 w-8 transition-colors",
+                            "h-8 w-8 transition-colors opacity-70 group-hover:opacity-100",
                             selectedKeywords.includes(result.keyword) 
-                              ? "text-muted-foreground bg-red-500/10 hover:bg-red-500/20" 
-                              : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                              ? "text-green-500 hover:text-green-600 hover:bg-green-500/10" 
+                              : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                           )}
                           title={`${selectedKeywords.includes(result.keyword) ? 'Remove from' : 'Add to'} plot`}
                         >
-                          {selectedKeywords.includes(result.keyword) ? (
-                            <Minus className="h-4 w-4" />
-                          ) : (
-                            <Plus className="h-4 w-4" />
-                          )}
+                          <LineChartIcon className="h-4 w-4" />
                           <span className="sr-only">
                             {selectedKeywords.includes(result.keyword) ? 'Remove from' : 'Add to'} plot
                           </span>
