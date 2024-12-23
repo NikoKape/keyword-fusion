@@ -184,7 +184,14 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
   const chartData = getChartData()
 
   return (
-    <Card className="mt-8">
+    <Card className="bg-gradient-to-br from-white/40 via-background to-background border border-border/40 relative
+      before:absolute before:inset-0 before:rounded-lg before:border before:border-border/20 before:bg-gradient-to-b before:from-white/60 before:to-transparent before:-z-10
+      after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-t after:from-transparent after:to-muted/5 after:-z-20
+      [box-shadow:0_2px_4px_rgba(0,0,0,0.02),0_1px_6px_rgba(0,0,0,0.03),inset_0_0_24px_rgba(255,255,255,0.7)]
+      dark:bg-gradient-to-br dark:from-background/95 dark:via-muted/10 dark:to-background/95
+      dark:border-border/30 dark:before:border-white/[0.05]
+      dark:after:bg-gradient-to-t dark:after:from-white/[0.02] dark:after:to-transparent
+      dark:[box-shadow:0_0_0_1px_rgba(255,255,255,0.05),inset_0_0_24px_rgba(255,255,255,0.03)]">
       <div className="p-6 space-y-6">
         <div className="flex justify-between items-center">
           <div className="space-y-1">
@@ -202,7 +209,14 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
         </div>
 
         {selectedKeywords.length > 0 && (
-          <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
+          <Card className="bg-gradient-to-br from-white/40 via-background to-background border border-border/40 relative
+            before:absolute before:inset-0 before:rounded-lg before:border before:border-border/20 before:bg-gradient-to-b before:from-white/60 before:to-transparent before:-z-10
+            after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-t after:from-transparent after:to-muted/5 after:-z-20
+            [box-shadow:0_2px_4px_rgba(0,0,0,0.02),0_1px_6px_rgba(0,0,0,0.03),inset_0_0_24px_rgba(255,255,255,0.7)]
+            dark:bg-gradient-to-br dark:from-background/95 dark:via-muted/10 dark:to-background/95
+            dark:border-border/30 dark:before:border-white/[0.05]
+            dark:after:bg-gradient-to-t dark:after:from-white/[0.02] dark:after:to-transparent
+            dark:[box-shadow:0_0_0_1px_rgba(255,255,255,0.05),inset_0_0_24px_rgba(255,255,255,0.03)]">
             <div className="flex items-center justify-between p-6 mb-4">
               <h3 className="text-lg font-medium tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Search Volume Trends</h3>
               <div className="flex items-center gap-2">
@@ -277,11 +291,19 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
           </Card>
         )}
 
-        <ScrollArea className="rounded-md border">
+        <ScrollArea className="rounded-lg border border-border/40 relative overflow-hidden
+          before:absolute before:inset-0 before:rounded-lg before:border before:border-border/20 before:bg-gradient-to-b before:from-white/60 before:to-transparent before:-z-10
+          after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-t after:from-transparent after:to-muted/5 after:-z-20
+          [box-shadow:0_2px_4px_rgba(0,0,0,0.02),0_1px_6px_rgba(0,0,0,0.03),inset_0_0_24px_rgba(255,255,255,0.7)]
+          dark:border-border/30 dark:before:border-white/[0.05]
+          dark:after:bg-gradient-to-t dark:after:from-white/[0.02] dark:after:to-transparent
+          dark:[box-shadow:0_0_0_1px_rgba(255,255,255,0.05),inset_0_0_24px_rgba(255,255,255,0.03)]">
           <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 border-b">
+                <tr className="bg-gradient-to-r from-white/60 via-background to-white/60 border-b border-border/40 relative
+                  after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:to-black/[0.02]
+                  dark:from-white/[0.02] dark:via-white/[0.01] dark:to-white/[0.02] dark:border-white/[0.05]">
                   <th className="text-left py-3 px-4 font-medium">
                     <button className="flex items-center text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
                       KEYWORD <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
