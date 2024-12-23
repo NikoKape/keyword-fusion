@@ -139,12 +139,13 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
   const exportToCsv = () => {
     if (!transformedData.data?.length) return
 
-    const headers = ['Keyword', 'Search Volume', 'Difficulty', 'CPC', 'Competition', 'Intent']
+    const headers = ['Keyword', 'Search Volume', 'Difficulty', 'CPC', 'CPC Range', 'Competition', 'Intent']
     const csvData = sortedResults.map(result => [
       result.keyword,
       result.keywordInfo.search_volume,
       result.keywordInfo.difficulty,
       result.keywordInfo.cpc,
+      `${result.keywordInfo.low_top_of_page_bid} - ${result.keywordInfo.high_top_of_page_bid}`,
       result.keywordInfo.competition_level,
       `${result.keywordInfo.intent.main}${result.keywordInfo.intent.foreign ? ' + ' + result.keywordInfo.intent.foreign.join(', ') : ''}`
     ])
@@ -245,6 +246,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       CPC <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
+                  <th className="text-center py-3 px-4 font-medium">CPC RANGE</th>
                   <th className="text-center py-3 px-4 font-medium">INTENT</th>
                   <th className="text-center py-3 px-4 font-medium">TRENDS</th>
                 </tr>
@@ -292,16 +294,30 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="flex flex-col items-center space-y-0.5">
-                        <div className="text-green-600 font-medium">
-                          ${result.keywordInfo.cpc.toFixed(2)}
-                        </div>
-                        {(result.keywordInfo.low_top_of_page_bid !== undefined && result.keywordInfo.high_top_of_page_bid !== undefined) && (
-                          <div className="text-[11px] text-muted-foreground">
-                            ${result.keywordInfo.low_top_of_page_bid.toFixed(2)} - ${result.keywordInfo.high_top_of_page_bid.toFixed(2)}
-                          </div>
-                        )}
+                      <div className="text-green-600 font-medium">
+                        ${result.keywordInfo.cpc.toFixed(2)}
                       </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      {(result.keywordInfo.low_top_of_page_bid !== undefined && result.keywordInfo.high_top_of_page_bid !== undefined) ? (
+                        <div className="flex items-center justify-center gap-2 text-xs">
+                          <div className="flex flex-col items-center">
+                            <span className="text-[11px] text-muted-foreground mb-0.5">Low</span>
+                            <span className="text-green-600/80 font-medium">
+                              ${result.keywordInfo.low_top_of_page_bid.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="h-[2px] w-6 bg-muted-foreground/20 mt-4" />
+                          <div className="flex flex-col items-center">
+                            <span className="text-[11px] text-muted-foreground mb-0.5">High</span>
+                            <span className="text-green-600 font-medium">
+                              ${result.keywordInfo.high_top_of_page_bid.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-[11px] text-muted-foreground">-</div>
+                      )}
                     </td>
                     <td className="py-4 px-4 text-center">
                       <div className="flex flex-col items-center justify-center text-sm">
