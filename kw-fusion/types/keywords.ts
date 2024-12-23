@@ -6,6 +6,8 @@ export interface RawKeywordInfo {
   competition_level: string
   cpc: number
   search_volume: number
+  low_top_of_page_bid?: number
+  high_top_of_page_bid?: number
   monthly_searches: Array<{
     year: number
     month: number
@@ -52,6 +54,8 @@ export interface KeywordInfo {
   competition: number
   competition_level: string
   difficulty: number
+  low_top_of_page_bid?: number
+  high_top_of_page_bid?: number
   intent: {
     main: string
     foreign: string[] | null

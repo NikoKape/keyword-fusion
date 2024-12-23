@@ -46,7 +46,9 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
         intent: {
           main: item.keyword_data?.search_intent_info?.main_intent ?? '',
           foreign: item.keyword_data?.search_intent_info?.foreign_intent ?? null
-        }
+        },
+        low_top_of_page_bid: item.keyword_data?.keyword_info?.low_top_of_page_bid ?? 0,
+        high_top_of_page_bid: item.keyword_data?.keyword_info?.high_top_of_page_bid ?? 0,
       },
       relatedKeywords: item.keyword_data?.related_keywords ?? [],
       monthlyData: (item.keyword_data?.keyword_info?.monthly_searches ?? []).map(search => ({
@@ -234,13 +236,13 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
-                      CPC <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                      COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
-                      COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
+                      CPC <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">INTENT</th>
@@ -277,12 +279,6 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
-                      <div className="flex items-center justify-center gap-1 text-green-600 font-medium">
-                        <span>$</span>
-                        {result.keywordInfo.cpc.toFixed(2)}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-center">
                       <div className="flex justify-center">
                         <Badge 
                           variant="outline"
@@ -293,6 +289,18 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                         >
                           {result.keywordInfo.competition_level.toLowerCase()}
                         </Badge>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex flex-col items-center space-y-0.5">
+                        <div className="text-green-600 font-medium">
+                          ${result.keywordInfo.cpc.toFixed(2)}
+                        </div>
+                        {(result.keywordInfo.low_top_of_page_bid !== undefined && result.keywordInfo.high_top_of_page_bid !== undefined) && (
+                          <div className="text-[11px] text-muted-foreground">
+                            ${result.keywordInfo.low_top_of_page_bid.toFixed(2)} - ${result.keywordInfo.high_top_of_page_bid.toFixed(2)}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">
