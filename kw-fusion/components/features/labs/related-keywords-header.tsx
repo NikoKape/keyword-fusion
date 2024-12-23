@@ -62,8 +62,8 @@ export function RelatedKeywordsHeader() {
         </div>
       </div>
       <p className="text-muted-foreground text-lg">
-        Discover valuable related keywords and get AI-powered insights
-      </p>
+      Discover related keywords to expand your reach and drive more traffic.
+</p>
     </div>
   )
 }
