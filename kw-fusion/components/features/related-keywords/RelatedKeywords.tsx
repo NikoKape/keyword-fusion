@@ -285,9 +285,11 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           label="Depth"
           value={formData.depth}
           options={[
+            { value: '0', label: 'Base Level' },
             { value: '1', label: '1 Level' },
             { value: '2', label: '2 Levels' },
             { value: '3', label: '3 Levels' },
+            { value: '4', label: '4 Levels' },
           ]}
           onChange={(value) => setFormData(prev => ({ ...prev, depth: value }))}
         />
@@ -299,7 +301,13 @@ export function RelatedKeywords({ onSubmitAction }: RelatedKeywordsProps) {
           options={[
             { value: '10', label: '10 Results' },
             { value: '20', label: '20 Results' },
+            { value: '30', label: '30 Results' },
+            { value: '40', label: '40 Results' },
             { value: '50', label: '50 Results' },
+            { value: '60', label: '60 Results' },
+            { value: '70', label: '70 Results' },
+            { value: '80', label: '80 Results' },
+            { value: '90', label: '90 Results' },
             { value: '100', label: '100 Results' },
           ]}
           onChange={(value) => setFormData(prev => ({ ...prev, limit: value }))}
