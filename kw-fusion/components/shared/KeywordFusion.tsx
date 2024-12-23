@@ -174,7 +174,7 @@ This is a placeholder response. In a real application, this would be replaced wi
         </Collapsible>
 
         <Tabs defaultValue="seo" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-3 p-1 bg-muted/50">
             <TabsTrigger 
               value="seo" 
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/10 data-[state=active]:to-violet-500/10 dark:data-[state=active]:from-blue-500/20 dark:data-[state=active]:to-violet-500/20 transition-all duration-200"
@@ -186,6 +186,12 @@ This is a placeholder response. In a real application, this would be replaced wi
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500/10 data-[state=active]:to-red-500/10 dark:data-[state=active]:from-orange-500/20 dark:data-[state=active]:to-red-500/20 transition-all duration-200"
             >
               PPC
+            </TabsTrigger>
+            <TabsTrigger 
+              value="custom"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500/10 data-[state=active]:to-teal-500/10 dark:data-[state=active]:from-emerald-500/20 dark:data-[state=active]:to-teal-500/20 transition-all duration-200"
+            >
+              Custom
             </TabsTrigger>
           </TabsList>
           <TabsContent value="seo">
@@ -218,19 +224,31 @@ This is a placeholder response. In a real application, this would be replaced wi
               ))}
             </div>
           </TabsContent>
+          <TabsContent value="custom">
+            <div className="space-y-4 mb-6">
+              <div>
+                <Label htmlFor="system-prompt" className="text-foreground">System Prompt</Label>
+                <Textarea
+                  id="system-prompt"
+                  placeholder="Enter a system prompt to guide the AI's behavior"
+                  value={systemPrompt}
+                  onChange={(e) => {
+                    setSystemPrompt(e.target.value)
+                    e.target.style.height = 'auto'
+                    e.target.style.height = `${e.target.scrollHeight}px`
+                  }}
+                  className="mt-1.5 bg-background/50 hover:bg-background focus:bg-background transition-colors min-h-[100px] w-full"
+                  style={{ resize: 'none', overflow: 'hidden' }}
+                />
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Create your own custom system prompt to guide the AI's behavior and responses. This allows for more specialized and targeted analysis of your keywords.
+                </p>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
 
         <div className="space-y-4 mb-6">
-          <div>
-            <Label htmlFor="system-prompt" className="text-foreground">System Prompt</Label>
-            <Textarea
-              id="system-prompt"
-              placeholder="Enter a system prompt to guide the AI's behavior"
-              value={systemPrompt}
-              onChange={(e) => setSystemPrompt(e.target.value)}
-              className="mt-1.5 bg-background/50 hover:bg-background focus:bg-background transition-colors resize-none"
-            />
-          </div>
           <div>
             <Label htmlFor="user-prompt" className="text-foreground">User Prompt</Label>
             <div className="flex gap-2">
@@ -258,23 +276,25 @@ This is a placeholder response. In a real application, this would be replaced wi
               <CardTitle className="text-lg font-medium text-foreground">Selected Keywords</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border bg-muted/30 p-4">
-                {keywords.map((keyword, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    className={`m-1 hover:bg-muted transition-colors ${
-                      selectedKeywords.includes(keyword) 
-                        ? 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30 text-blue-700 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 dark:text-blue-200' 
-                        : ''
-                    }`}
-                    onClick={() => handleKeywordToggle(keyword)}
-                  >
-                    {keyword}
-                  </Button>
-                ))}
-              </ScrollArea>
+              <div className="w-full rounded-md border bg-muted/30 p-4">
+                <div className="flex flex-wrap gap-1">
+                  {keywords.map((keyword, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      className={`hover:bg-muted transition-colors ${
+                        selectedKeywords.includes(keyword) 
+                          ? 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30 text-blue-700 dark:bg-blue-500/20 dark:hover:bg-blue-500/30 dark:text-blue-200' 
+                          : ''
+                      }`}
+                      onClick={() => handleKeywordToggle(keyword)}
+                    >
+                      {keyword}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
           <Card className="bg-gradient-to-br from-background via-muted/50 to-background border shadow-lg">
@@ -282,13 +302,23 @@ This is a placeholder response. In a real application, this would be replaced wi
               <CardTitle className="text-lg font-medium text-foreground">AI Response</CardTitle>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[200px] w-full rounded-md border bg-muted/30 p-4">
+              <div className="w-full rounded-md border bg-muted/30 p-4">
                 <Textarea
                   value={aiResponse}
                   readOnly
-                  className="w-full h-full min-h-[180px] bg-transparent border-0 focus-visible:ring-0 text-muted-foreground"
+                  className="w-full bg-transparent border-0 focus-visible:ring-0 text-muted-foreground min-h-[100px]"
+                  style={{
+                    resize: 'none',
+                    overflow: 'hidden',
+                    height: 'auto',
+                    minHeight: '100px'
+                  }}
+                  onChange={(e) => {
+                    e.target.style.height = 'auto'
+                    e.target.style.height = `${e.target.scrollHeight}px`
+                  }}
                 />
-              </ScrollArea>
+              </div>
             </CardContent>
           </Card>
         </div>

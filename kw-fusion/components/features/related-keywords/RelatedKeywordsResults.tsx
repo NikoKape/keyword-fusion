@@ -192,28 +192,28 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                       KEYWORD <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
+                  <th className="text-center py-3 px-4 font-medium">
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
                       SEARCH VOLUME <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
+                  <th className="text-center py-3 px-4 font-medium">
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
                       DIFFICULTY <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
+                  <th className="text-center py-3 px-4 font-medium">
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
                       CPC <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                  <th className="text-center py-3 px-4 font-medium">
+                    <button className="flex items-center justify-center mx-auto hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
                       COMPETITION <ArrowUpDown className="ml-1 h-4 w-4" />
                     </button>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium">INTENT</th>
-                  <th className="text-left py-3 px-4 font-medium">TRENDS</th>
+                  <th className="text-center py-3 px-4 font-medium">INTENT</th>
+                  <th className="text-center py-3 px-4 font-medium">TRENDS</th>
                 </tr>
               </thead>
               <tbody>
@@ -226,67 +226,73 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                     )}
                   >
                     <td className="py-4 px-4 font-medium">{result.keyword}</td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2 text-blue-600">
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex items-center justify-center gap-2 text-blue-600">
                         <TrendingUp className="h-4 w-4" />
                         {result.keywordInfo.search_volume.toLocaleString()}
                       </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <Badge 
-                        variant="outline" 
-                        className={cn(
-                          "font-mono",
-                          getDifficultyColor(result.keywordInfo.difficulty)
-                        )}
-                      >
-                        {result.keywordInfo.difficulty}
-                      </Badge>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex justify-center">
+                        <Badge 
+                          variant="outline" 
+                          className={cn(
+                            "font-mono",
+                            getDifficultyColor(result.keywordInfo.difficulty)
+                          )}
+                        >
+                          {result.keywordInfo.difficulty}
+                        </Badge>
+                      </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-1 text-green-600 font-medium">
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex items-center justify-center gap-1 text-green-600 font-medium">
                         <span>$</span>
                         {result.keywordInfo.cpc.toFixed(2)}
                       </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <Badge 
-                        variant="outline"
-                        className={cn(
-                          "capitalize border",
-                          getCompetitionColor(result.keywordInfo.competition_level)
-                        )}
-                      >
-                        {result.keywordInfo.competition_level.toLowerCase()}
-                      </Badge>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex justify-center">
+                        <Badge 
+                          variant="outline"
+                          className={cn(
+                            "capitalize border",
+                            getCompetitionColor(result.keywordInfo.competition_level)
+                          )}
+                        >
+                          {result.keywordInfo.competition_level.toLowerCase()}
+                        </Badge>
+                      </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <div className="text-sm">
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex flex-col items-center justify-center text-sm">
                         <Badge variant="secondary" className="font-normal">
                           {result.keywordInfo.intent.main}
                         </Badge>
                         {result.keywordInfo.intent.foreign && (
-                          <span className="ml-2 text-muted-foreground">
+                          <span className="mt-1 text-muted-foreground">
                             + {result.keywordInfo.intent.foreign.join(', ')}
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-4">
-                      <Button
-                        variant={selectedKeywords.includes(result.keyword) ? "outline" : "outline"}
-                        size="sm"
-                        onClick={() => toggleKeywordSelection(result.keyword)}
-                        className={cn(
-                          "gap-2",
-                          selectedKeywords.includes(result.keyword) 
-                            ? "hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 hover:border-red-300" 
-                            : ""
-                        )}
-                      >
-                        <BarChart2 className="h-4 w-4" />
-                        {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add'}
-                      </Button>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex justify-center">
+                        <Button
+                          variant={selectedKeywords.includes(result.keyword) ? "outline" : "outline"}
+                          size="sm"
+                          onClick={() => toggleKeywordSelection(result.keyword)}
+                          className={cn(
+                            "gap-2",
+                            selectedKeywords.includes(result.keyword) 
+                              ? "hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 hover:border-red-300" 
+                              : ""
+                          )}
+                        >
+                          <BarChart2 className="h-4 w-4" />
+                          {selectedKeywords.includes(result.keyword) ? 'Remove' : 'Add'}
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
