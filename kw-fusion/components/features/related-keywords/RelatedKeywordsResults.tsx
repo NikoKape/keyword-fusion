@@ -305,27 +305,27 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
                   after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:to-black/[0.02] after:pointer-events-none
                   dark:from-white/[0.02] dark:via-white/[0.01] dark:to-white/[0.02] dark:border-white/[0.05]">
                   <th className="text-left py-3 px-4 font-medium">
-                    <button className="flex items-center text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
+                    <button className="flex items-center text-xs tracking-wider text-muted-foreground/90 hover:text-foreground dark:hover:text-white transition-colors" onClick={() => requestSort('keyword')}>
                       KEYWORD <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('search_volume')}>
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-foreground dark:hover:text-white transition-colors" onClick={() => requestSort('search_volume')}>
                       SEARCH VOLUME <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('difficulty')}>
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-foreground dark:hover:text-white transition-colors" onClick={() => requestSort('difficulty')}>
                       DIFFICULTY <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('competition')}>
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-foreground dark:hover:text-white transition-colors" onClick={() => requestSort('competition')}>
                       COMPETITION <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
                   <th className="text-center py-3 px-4 font-medium">
-                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('cpc')}>
+                    <button className="flex items-center justify-center mx-auto text-xs tracking-wider text-muted-foreground/90 hover:text-foreground dark:hover:text-white transition-colors" onClick={() => requestSort('cpc')}>
                       CPC <ArrowUpDown className="ml-1 h-3.5 w-3.5" />
                     </button>
                   </th>
