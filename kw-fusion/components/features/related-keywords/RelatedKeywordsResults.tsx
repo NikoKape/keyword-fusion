@@ -302,7 +302,7 @@ export function RelatedKeywordsResults({ rawData }: RelatedKeywordsResultsProps)
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gradient-to-r from-white/60 via-background to-white/60 border-b border-border/40 relative
-                  after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:to-black/[0.02]
+                  after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:to-black/[0.02] after:pointer-events-none
                   dark:from-white/[0.02] dark:via-white/[0.01] dark:to-white/[0.02] dark:border-white/[0.05]">
                   <th className="text-left py-3 px-4 font-medium">
                     <button className="flex items-center text-xs tracking-wider text-muted-foreground/90 hover:text-primary transition-colors" onClick={() => requestSort('keyword')}>
